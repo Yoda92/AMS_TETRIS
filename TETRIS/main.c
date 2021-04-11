@@ -6,12 +6,14 @@
  */ 
 
 #include <avr/io.h>
-#include "shapes.h"
+#include "tetris.h"
 
 int main(void)
 {
+	startGame();
     while (1) 
     {
     }
+	return 0;
 }
 
