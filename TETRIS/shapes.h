@@ -15,13 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-
-typedef enum {
-	EMPTY,
-	RED,
-	GREEN,
-	BLUE
-} Block;
+#include "block.h"
 
 typedef struct Shape{
 	size_t rows;
