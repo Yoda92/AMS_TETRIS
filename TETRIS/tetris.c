@@ -8,7 +8,7 @@
 #include "tetris.h"
 
 #define MAX_ROWS 20
-#define MAX_COLUMNS 10
+#define MAX_COLUMNS 15
 
 typedef struct GameState {
 	Shape shape;
@@ -16,12 +16,8 @@ typedef struct GameState {
 	Shape pile;
 }GameState;
 
-void clean() {
-	// clean up
-}
-
 void moveDown(GameState* state) {
-	state->vector.y++;
+	state->vector.y = state->vector.y + 1;
 }
 
 bool isShapeOutOfBounds(Shape* shape) {
@@ -38,7 +34,10 @@ void nextGameState(GameState* state) {
 	if (isCombinePossible(&nextShape, &state->pile) && !isShapeOutOfBounds(&nextShape)) {
 		moveDown(state);
 	} else {
-		Shape combinedShape = combineShapes(&state->pile, &state->shape);
+		Shape currentShape = copyShape(&state->shape);
+		shift(&currentShape, state->vector);
+		Shape combinedShape = combineShapes(&state->pile, &currentShape);
+		deleteShape(&currentShape);
 		deleteShape(&state->pile);
 		deleteShape(&state->shape);
 		state->pile = combinedShape;
@@ -49,18 +48,16 @@ void nextGameState(GameState* state) {
 		};	
 		state->vector = vector;
 	}
-	clean();
+	deleteShape(&nextShape);
 }
 
 void sendToDisplay(GameState* state) {
 	Shape currentShape = copyShape(&state->shape);
-	Vector downMovement = {
-		.x = 0,
-		.y = state->vector.y + 1
-	};
-	shift(&currentShape, downMovement);
+	shift(&currentShape, state->vector);
 	Shape combinedShape = combineShapes(&state->pile, &currentShape);
-	// render(combinedShape)
+	rotate(&combinedShape);
+	renderDisplay(combinedShape);
+	deleteShape(&combinedShape);
 }
 
 void wait() {

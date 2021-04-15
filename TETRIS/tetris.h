@@ -10,9 +10,10 @@
 #define TETRIS_H_
 
 #define F_CPU 16000000
-#define TICK 1000
+#define TICK 750
 
 #include "shapes.h"
+#include "display.h"
 #include <util/delay.h>
 
 void startGame();

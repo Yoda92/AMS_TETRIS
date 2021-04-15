@@ -140,7 +140,7 @@ void prependColumns(Shape* shape, size_t amount)  {
 	Block* _matrix = createEmptyMatrix(shape->rows, shape->columns + amount);
 	for(size_t y=0; y < shape->rows; y++) {
 		for(size_t x=0; x < shape->columns; x++) {
-			_matrix[(y * (shape->columns + amount)) + x] = shape->matrix[(y * shape->columns) + x];
+			_matrix[(y * (shape->columns + amount)) + x + amount] = shape->matrix[(y * shape->columns) + x];
 		}
 	}
 	free(shape->matrix);
@@ -162,7 +162,7 @@ void appendColumns(Shape* shape, size_t amount)  {
 	Block* _matrix = createEmptyMatrix(shape->rows, shape->columns + amount);
 	for(size_t y=0; y < shape->rows; y++) {
 		for(size_t x=0; x < shape->columns; x++) {
-			_matrix[(y * shape->columns) + x] = shape->matrix[(y * shape->columns) + x];
+			_matrix[(y * (shape->columns + amount)) + x] = shape->matrix[(y * shape->columns) + x];
 		}
 	}
 	free(shape->matrix);
@@ -201,9 +201,11 @@ bool isCombinePossible(Shape* first, Shape* second) {
 	int errors = 0;
 	for(int i = 0; i < (_first.rows * _first.columns); i++) {
 		if (!canCombine(_first.matrix[i], _second.matrix[i])) {
-			errors++;
+			errors = errors + 1;
 		}
 	}
+	deleteShape(&_first);
+	deleteShape(&_second);
 	return (errors == 0);
 }
 
