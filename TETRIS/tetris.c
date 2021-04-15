@@ -38,9 +38,10 @@ void nextGameState(GameState* state) {
 	if (isCombinePossible(&nextShape, &state->pile) && !isShapeOutOfBounds(&nextShape)) {
 		moveDown(state);
 	} else {
-		state->pile = combineShapes(&state->pile, &state->shape);
+		Shape combinedShape = combineShapes(&state->pile, &state->shape);
 		deleteShape(&state->pile);
 		deleteShape(&state->shape);
+		state->pile = combinedShape;
 		state->shape = createRandomShape();
 		Vector vector = {
 			.x = ((double) (MAX_COLUMNS - state->shape.columns) / 2),
@@ -51,7 +52,7 @@ void nextGameState(GameState* state) {
 	clean();
 }
 
-void render() {
+void render(GameState* state) {
 	// update screen
 }
 
