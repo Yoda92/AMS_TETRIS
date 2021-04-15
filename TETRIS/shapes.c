@@ -6,8 +6,6 @@
 */
 #include "shapes.h"
 
-#define DEFAULT_COUNT 1
-
 Block t[] = { EMPTY, RED, EMPTY, RED, RED, RED };
 
 const Shape shapes[DEFAULT_COUNT] = {

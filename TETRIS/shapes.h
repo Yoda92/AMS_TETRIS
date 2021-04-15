@@ -9,6 +9,8 @@
 #ifndef SHAPES_H_
 #define SHAPES_H_
 
+#define DEFAULT_COUNT 1
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -46,5 +48,6 @@ void shift(Shape*, Vector);
 Shape copyShape(Shape*);
 bool isCombinePossible(Shape*, Shape*);
 Shape combineShapes(Shape*, Shape*);
+void normalizeShapes(Shape*, Shape*);
 
 #endif /* SHAPES_H_ */
