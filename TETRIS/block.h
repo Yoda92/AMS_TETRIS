@@ -9,11 +9,20 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 
+#include <stdbool.h>
+
 typedef enum {
 	EMPTY,
 	RED,
 	GREEN,
-	BLUE
+	BLUE, 
+	LIGHTBLUE, 
+	MAGENTA,
+	YELLOW,
+	ORANGE
 } Block;
+
+Block combinesBlocks(Block, Block);
+bool canCombine(Block, Block);
 
 #endif /* BLOCK_H_ */

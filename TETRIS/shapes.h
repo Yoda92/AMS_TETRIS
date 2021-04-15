@@ -9,7 +9,7 @@
 #ifndef SHAPES_H_
 #define SHAPES_H_
 
-#define DEFAULT_COUNT 1
+#define DEFAULT_COUNT 7
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -28,7 +28,7 @@ typedef struct Vector{
 	size_t y;
 }Vector;
 
-const Shape shapes[1];
+const Shape shapes[DEFAULT_COUNT];
 
 Block* createEmptyMatrix(size_t, size_t);
 Shape createEmptyShape(size_t, size_t);

@@ -52,12 +52,19 @@ void nextGameState(GameState* state) {
 	clean();
 }
 
-void render(GameState* state) {
-	// update screen
+void sendToDisplay(GameState* state) {
+	Shape currentShape = copyShape(&state->shape);
+	Vector downMovement = {
+		.x = 0,
+		.y = state->vector.y + 1
+	};
+	shift(&currentShape, downMovement);
+	Shape combinedShape = combineShapes(&state->pile, &currentShape);
+	// render(combinedShape)
 }
 
 void wait() {
-	// _delay_ms(TICK);
+	_delay_ms(TICK);
 }
 
 GameState initGameState() {
@@ -78,7 +85,7 @@ GameState initGameState() {
 void startGame() {
 	GameState state = initGameState();
 	while(1) {
-		render(&state);
+		sendToDisplay(&state);
 		wait();
 		nextGameState(&state);
 	}
