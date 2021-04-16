@@ -10,7 +10,7 @@
 #define TETRIS_H_
 
 #define F_CPU 16000000
-#define TICK 750
+#define TICK 250
 
 #include "shapes.h"
 #include "display.h"

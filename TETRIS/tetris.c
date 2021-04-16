@@ -62,6 +62,7 @@ void sendToDisplay(GameState* state) {
 }
 
 void wait() {
+	// TODO: Dont use constant wait time, but start timer instead.
 	_delay_ms(TICK);
 }
 

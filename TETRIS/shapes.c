@@ -87,8 +87,13 @@ Shape createEmptyShape(size_t rows, size_t columns) {
 	return _emptyShape;
 }
 
+int createRandomNumber() {
+	// TODO: Use srand(someInt) to make random
+	return rand() % DEFAULT_COUNT;
+}
+
 Shape createRandomShape() {
-	const Shape* _randomShape = &shapes[rand() % DEFAULT_COUNT];
+	const Shape* _randomShape = &shapes[createRandomNumber()];
 	Shape output = createEmptyShape(_randomShape->rows, _randomShape->columns);
 	copyMatrix(_randomShape->matrix, output.matrix, _randomShape->rows, _randomShape->columns);
 	
@@ -200,8 +205,8 @@ bool isCombinePossible(Shape* first, Shape* second) {
 	normalizeShapes(&_first, &_second);
 	int errors = 0;
 	for(int i = 0; i < (_first.rows * _first.columns); i++) {
-		if (!_first.matrix[i] == EMPTY && !_second.matrix[i] == EMPTY) {
-			errors = errors + 1;
+		if (!canCombine(_first.matrix[i], _second.matrix[i])) {
+			errors++;
 		}
 	}
 	deleteShape(&_first);

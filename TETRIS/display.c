@@ -186,13 +186,13 @@ void renderDisplay(Shape shape)
 					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 0, 255);
 					break;
 				case LIGHTBLUE:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 100, 100, 255);
-					break;
-				case YELLOW:
 					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 0, 255, 255);
 					break;
+				case YELLOW:
+					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 255, 0);
+					break;
 				case ORANGE:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 100, 100);
+					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 128, 0);
 					break;
 				default:
 					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 255, 255);
