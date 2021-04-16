@@ -200,7 +200,7 @@ bool isCombinePossible(Shape* first, Shape* second) {
 	normalizeShapes(&_first, &_second);
 	int errors = 0;
 	for(int i = 0; i < (_first.rows * _first.columns); i++) {
-		if (!canCombine(_first.matrix[i], _second.matrix[i])) {
+		if (!_first.matrix[i] == EMPTY && !_second.matrix[i] == EMPTY) {
 			errors = errors + 1;
 		}
 	}

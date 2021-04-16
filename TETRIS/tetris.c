@@ -27,7 +27,7 @@ bool isShapeOutOfBounds(Shape* shape) {
 void nextGameState(GameState* state) {
 	Shape nextShape = copyShape(&state->shape);
 	Vector downMovement = {
-		.x = 0,
+		.x = state->vector.x,
 		.y = state->vector.y + 1
 	};
 	shift(&nextShape, downMovement);
@@ -58,6 +58,7 @@ void sendToDisplay(GameState* state) {
 	rotate(&combinedShape);
 	renderDisplay(combinedShape);
 	deleteShape(&combinedShape);
+	deleteShape(&currentShape);
 }
 
 void wait() {
