@@ -22,7 +22,7 @@ typedef enum {
 	ORANGE
 } Block;
 
-Block combinesBlocks(Block, Block);
-bool canCombine(Block, Block);
+Block CombinesBlocks(Block, Block);
+bool CanCombine(Block, Block);
 
 #endif /* BLOCK_H_ */

@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#include "block.h"
+#include "blocks.h"
 
 typedef struct Shape{
 	size_t rows;
@@ -30,18 +30,18 @@ typedef struct Vector{
 
 const Shape shapes[DEFAULT_COUNT];
 
-Block* createEmptyMatrix(size_t, size_t);
-Shape createEmptyShape(size_t, size_t);
-Shape createRandomShape();
-void deleteShape(Shape*);
-void flipRows(Shape*);
-void transpose(Shape*);
-void rotate(Shape*);
-void prependRows(Shape*, size_t);
-void shift(Shape*, Vector);
-Shape copyShape(Shape*);
-bool isCombinePossible(Shape*, Shape*);
-Shape combineShapes(Shape*, Shape*);
-void normalizeShapes(Shape*, Shape*);
+Block* CreateEmptyMatrix(size_t, size_t);
+Shape CreateEmptyShape(size_t, size_t);
+Shape CreateRandomShape();
+void DeleteShape(Shape*);
+void FlipRows(Shape*);
+void Transpose(Shape*);
+void Rotate(Shape*);
+void PrependRows(Shape*, size_t);
+void Shift(Shape*, Vector);
+Shape CopyShape(Shape*);
+bool IsCombinePossible(Shape*, Shape*);
+Shape CombineShapes(Shape*, Shape*);
+void NormalizeShapes(Shape*, Shape*);
 
 #endif /* SHAPES_H_ */

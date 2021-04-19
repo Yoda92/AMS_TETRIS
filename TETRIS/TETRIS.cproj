@@ -150,10 +150,10 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="block.c">
+    <Compile Include="blocks.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="block.h">
+    <Compile Include="blocks.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="display.c">

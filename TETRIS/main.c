@@ -12,15 +12,7 @@
 
 int main(void)
 {
-	// Initialize the display
-	DisplayInit();
-
-	startGame();
-    while (1) 
-    {
-		DisplayOn();
-		_delay_ms(1000);
-    }
+	RunTetris();
 	return 0;
 }
 
