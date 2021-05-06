@@ -21,7 +21,3 @@ struct Coordinate coordFromADC(struct ADC_read reading);
 float fractionFromADC(unsigned int ADC_val);
 unsigned int dimensionFromFraction(float fraction, unsigned int maxDimension);
 
-// SPI related
-struct ADC_read readADC();
-
-// Interrupt related

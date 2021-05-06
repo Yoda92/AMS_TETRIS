@@ -23,44 +23,20 @@
 #define LOW 0
 #define HIGH 1
 
-/****************************************************************************************************/
-/****************************************** Public Methods ******************************************/
-/****************************************************************************************************/
-
-void initSpi()
-{
-    //Set as input
-    MASTER_IN_DIRECTION_REG &= ~(1<<MASTER_IN_PIN);
-    //Set as output
-    MASTER_OUT_DIRECTION_REG |= (1<<MASTER_OUT_PIN);
-    CLOCK_PORT_DIRECTION_REG |= (1<<CLOCK_PIN);
-    CHIP_SELECT_DIRECTION_REG |= (1<<CHIP_SELECT_PIN);
-}
-
-
-unsigned char readWriteByte(unsigned char writeThis)
-{
-    unsigned char buf = writeThis;
-    setChipSelect(LOW);
-    setClock(LOW);
-    // For each bit in byte
-    for (unsigned char i = 0; i < 8; i++)
-    {
-        setMasterOutValue(getMSB(buf));
-        buf << 1;
-        _delay_us(1);
-        risingClock();
-        buf = setLSB(buf, getMasterInValue());
-        _delay_us(1);
-        fallingClock();
-    }
-    setChipSelect(HIGH);
-    return buf;
-}
 
 /****************************************************************************************************/
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
+
+void setChipSelect(unsigned char state);
+void setClock(unsigned char state);
+void risingClock();
+void fallingClock();
+void setMasterOutValue(unsigned char state);
+unsigned char getMasterInValue();
+unsigned char getMSB(unsigned char byte);
+unsigned char setLSB(unsigned char byte, unsigned char state);
+
 // Takes high or low
 void setChipSelect(unsigned char state)
 {
@@ -144,3 +120,40 @@ unsigned char setLSB(unsigned char byte, unsigned char state)
     }
     return byte;
 }
+
+
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+void initSpi()
+{
+    //Set as input
+    MASTER_IN_DIRECTION_REG &= ~(1<<MASTER_IN_PIN);
+    //Set as output
+    MASTER_OUT_DIRECTION_REG |= (1<<MASTER_OUT_PIN);
+    CLOCK_PORT_DIRECTION_REG |= (1<<CLOCK_PIN);
+    CHIP_SELECT_DIRECTION_REG |= (1<<CHIP_SELECT_PIN);
+}
+
+
+unsigned char readWriteByte(unsigned char writeThis)
+{
+    unsigned char buf = writeThis;
+    setChipSelect(LOW);
+    setClock(LOW);
+    // For each bit in byte
+    for (unsigned char i = 0; i < 8; i++)
+    {
+        setMasterOutValue(getMSB(buf));
+        buf = buf << 1;
+        _delay_us(1);
+        risingClock();
+        buf = setLSB(buf, getMasterInValue());
+        _delay_us(1);
+        fallingClock();
+    }
+    setChipSelect(HIGH);
+    return buf;
+}
+
