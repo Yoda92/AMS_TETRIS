@@ -164,4 +164,6 @@ void RunTetris() {
 			}
 		}
 	}
+	SendToDisplay(&game);
+	DisplayGameOver();
 }

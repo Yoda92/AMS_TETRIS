@@ -18,6 +18,11 @@ void GraphicsInit() {
 	referenceShape = CreateEmptyShape(BLOCK_COUNT_HEIGHT, BLOCK_COUNT_WIDTH);
 }
 
+void DisplayGameOver() {
+	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, backgroundColor);
+	RenderText("GAME OVER", 24, 148, 3);
+}
+
 void RenderGame(Shape* shape, size_t score) {
 	if (score != referenceScore) {
 		RenderScore(score);

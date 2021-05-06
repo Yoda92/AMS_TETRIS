@@ -26,6 +26,7 @@
 Shape referenceShape;
 size_t referenceScore;
 
+void DisplayGameOver();
 void GraphicsInit();
 void RenderGame(Shape*, size_t);
 void RenderScore(size_t);
