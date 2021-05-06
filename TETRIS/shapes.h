@@ -16,20 +16,13 @@
 #include <stdbool.h>
 #include <math.h>
 #include "blocks.h"
-
-typedef struct Shape{
-	size_t rows;
-	size_t columns;
-	Block* matrix;
-}Shape;
-
-typedef struct Vector{
-	size_t x;
-	size_t y;
-}Vector;
+#include "models/shape.h"
+#include "models/vector.h"
+#include "models/direction.h"
 
 const Shape shapes[DEFAULT_COUNT];
 
+void ShiftVector(Vector*, Direction);
 Block* CreateEmptyMatrix(size_t, size_t);
 Shape CreateEmptyShape(size_t, size_t);
 Shape CreateRandomShape();

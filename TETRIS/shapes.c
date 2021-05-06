@@ -184,9 +184,56 @@ void appendColumns(Shape* shape, size_t amount)  {
 	shape->columns = shape->columns + amount;
 }
 
+void removeRow(Shape* shape, size_t row)  {
+	Block* _matrix = CreateEmptyMatrix(shape->rows - 1, shape->columns);
+	for(size_t y=0; y < shape->rows; y++) {
+		if (y == row) {
+			continue;
+		}
+		for(size_t x=0; x < shape->columns; x++) {
+			_matrix[((y - (y > row ? 1 : 0)) * (shape->columns)) + x] = shape->matrix[(y * shape->columns) + x];
+		}
+	}
+	free(shape->matrix);
+	shape->matrix = _matrix;
+	shape->rows = shape->rows - 1;
+}
+
+bool isRowComplete(Shape* shape, size_t row) {
+	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns); x++) {
+		if (shape->matrix[x] == EMPTY) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
 void Shift(Shape* shape, Vector vector) {
 	prependColumns(shape, vector.x);
 	PrependRows(shape, vector.y);
+}
+
+void ShiftVector(Vector* vector, Direction direction) {
+		switch (direction) {
+			case UP: {
+				vector->y = vector->y - 1;
+				break;
+			}
+			case DOWN: {
+				vector->y = vector->y + 1;
+				break;
+			}
+			case LEFT: {
+				vector->x = vector->x - 1;
+				break;
+			}
+			case RIGHT: {
+				vector->x = vector->x + 1;
+				break;
+			}
+			default: {}
+		}
 }
 
 void setSize(Shape* shape, size_t rows, size_t columns) {

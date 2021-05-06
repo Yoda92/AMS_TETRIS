@@ -9,8 +9,6 @@
 #define F_CPU 16000000
 #include <util/delay.h>
 #include "display.h"
-#include "shapes.h"
-#include "tetris.h"
 
 // Data port definitions:
 #define DATA_PORT_HIGH PORTA
@@ -25,10 +23,6 @@
 #define CS_BIT  1
 #define RST_PORT PORTG
 #define RST_BIT 0
-
-// Game height and width based on 20 rows and 10 columns
-#define HEIGHT 320/20 // 16
-#define WIDTH 240/15 // 16
 
 // LOCAL FUNCTIONS /////////////////////////////////////////////////////////////
 
@@ -87,7 +81,7 @@ void DisplayInit()
 	SleepOut();
 	DisplayOn();
 	
-	MemoryAccessControl(0b00001000);
+	MemoryAccessControl(0b01001000);
 	InterfacePixelFormat(0b00000101);
 }
 
@@ -124,9 +118,9 @@ void MemoryWrite()
 }
 
 // Red 0-31, Green 0-63, Blue 0-31
-void WritePixel(unsigned char Red, unsigned char Green, unsigned char Blue)
+void WritePixel(Color color)
 {
-	WriteData(((unsigned int)Red<<11) | ((unsigned int)Green<<5) | Blue);
+	WriteData(((unsigned int)color.red<<11) | ((unsigned int)color.green<<5) | color.blue);
 }
 
 // Set Column Address (0-239), Start > End
@@ -145,59 +139,76 @@ void SetPageAddress(unsigned int Start, unsigned int End)
 	WriteCommand(0x2B);
 	WriteData(Start>>8);              // Write MSB of start
 	WriteData(Start);				  // Write LSB of start
-	//WriteData(End>>8);              // Write MSB of end
-	//WriteData(End);                 // Write LSB of end
+	WriteData(End>>8);              // Write MSB of end
+	WriteData(End);                 // Write LSB of end
 }
 
 // Fills rectangle with specified color
 // (StartX,StartY) = Upper left corner. X horizontal (0-319) , Y vertical (0-239).
 // Height (1-240) is vertical. Width (1-320) is horizontal.
 // R-G-B = 5-6-5 bits.
-void FillRectangle(unsigned int StartX, unsigned int StartY, unsigned int Width, unsigned int Height, unsigned char Red, unsigned char Green, unsigned char Blue)
+void FillRectangle(unsigned int StartX, unsigned int StartY, unsigned int Width, unsigned int Height, Color color)
 {
-	SetPageAddress(StartX, StartX + Width);           //Start X value and end value
-	SetColumnAddress(StartY, StartY + Height);        //Start Y value and end value
+	SetPageAddress(StartY, StartY + Height);           //Start X value and end value
+	SetColumnAddress(StartX, StartX + Width);        //Start Y value and end value
 	MemoryWrite();
 	for (unsigned long i = 0; i < ((unsigned long)(Width+1) * (Height+1)); i++)
 	{
-		WritePixel(Red, Green, Blue);
+		WritePixel(color);
 	}
 }
 
-void renderDisplay(Shape shape) 
-{
-	for(size_t y=0; y < shape.rows; y++) {
-		for(size_t x=0; x < shape.columns; x++) {
-			switch(shape.matrix[(y * shape.columns) + x])
-			{
-				case EMPTY:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 0, 0, 0);
-					break;
-				case RED:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 0, 0);
-					break;
-				case GREEN:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 0, 255, 0);
-					break;
-				case BLUE:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 0, 0, 255);
-					break;
-				case MAGENTA:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 0, 255);
-					break;
-				case LIGHTBLUE:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 0, 255, 255);
-					break;
-				case YELLOW:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 255, 0);
-					break;
-				case ORANGE:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 220, 50, 0);
-					break;
-				default:
-					FillRectangle(x*WIDTH, y*HEIGHT, WIDTH, HEIGHT, 255, 255, 255);
+void DrawText(char bitmap[8], unsigned int StartX, unsigned int StartY, size_t scale, Color textColor, Color backgroundColor) {
+	size_t scaledWidth = (8 * scale);
+	size_t scaledHeigth = (8 * scale);
+	SetPageAddress(StartY, StartY + scaledHeigth - 1);
+	SetColumnAddress(StartX, StartX + scaledWidth - 1);
+	MemoryWrite();
+	for(size_t i = 0; i < scaledHeigth; i++) {
+		for(size_t y = 0; y < scaledWidth; y++) {
+			if (0b10000000 >> ((y / scale) % 8) & bitmap[i / scale]) {
+				WritePixel(textColor);
+				} else {
+				WritePixel(backgroundColor);
 			}
 		}
-	}
+	}	
 }
+
+//void DrawTest(unsigned char bitmap[], size_t width, size_t height) {
+	//SetPageAddress(0, height - 1);
+	//SetColumnAddress(0, width - 1);
+	//MemoryWrite();
+	//for(size_t i = 0; i < height; i++) {
+		//for(size_t y = 0; y < width; y++) {
+			//if (0b10000000 >> (y % 8) & bitmap[i]) {
+				//WritePixel(0, 0, 0);
+				//} else {
+				//WritePixel(255, 255, 255);
+			//}			
+		//}
+	//}
+//}
+//
+//void DrawBitmap(unsigned char bitmap[]) {
+	//size_t width = bitmap[0];
+	//size_t height = bitmap[1];
+	//size_t rowByteOffset = 8 - (width % 8);
+	//size_t currentIndex;
+	//size_t skip;
+	//SetPageAddress(0, height - 1);
+	//SetColumnAddress(0, width - 1);
+	//MemoryWrite();
+	//for(size_t i = 0; i < height; i++) {
+		//skip = rowByteOffset * i;
+		//for(size_t y = 0; y < width; y++) {
+			//currentIndex = i * width + y + skip;
+			//if ((0b10000000 >> ((currentIndex) % 8)) & bitmap[3 + (currentIndex >> 3)]) {
+				//WritePixel(0, 0, 0);
+				//} else {
+				//WritePixel(255, 255, 255);
+			//}		
+		//}
+	//}
+//}
 

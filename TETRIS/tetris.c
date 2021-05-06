@@ -7,22 +7,27 @@
 
 #include "tetris.h"
 
-void MoveDown(TetrisGame* game) {
-	game->vector.y = game->vector.y + 1;
+ISR(TIMER5_OVF_vect)
+{
+	cli();
+	TCCR5B=0b00000000;
+	inputEnabled = false;
+}
+
+void Move(TetrisGame* game, Direction direction) {
+	ShiftVector(&game->vector, direction);
 }
 
 bool IsShapeOutOfBounds(Shape* shape) {
 	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS);
 }
 
-bool CanMoveDown(TetrisGame* game) {
+bool CanMove(TetrisGame* game, Direction direction) {
 	Shape nextShape = CopyShape(&game->shape);
-	Vector downMovement = {
-		.x = game->vector.x,
-		.y = game->vector.y + 1
-	};	
-	Shift(&nextShape, downMovement);
-	bool _canMoveDown = IsCombinePossible(&nextShape, &game->pile) && !IsShapeOutOfBounds(&nextShape);
+	Vector nextVector = { .x = game->vector.x, .y = game->vector.y};
+	ShiftVector(&nextVector, direction);
+	Shift(&nextShape, nextVector);
+	bool _canMoveDown = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
 	DeleteShape(&nextShape);
 	return _canMoveDown;
 }
@@ -59,18 +64,29 @@ void SendToDisplay(TetrisGame* game) {
 	Shape shape = CopyShape(&game->shape);
 	Shift(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
-	Rotate(&combinedShape);
-	renderDisplay(combinedShape);
+	RenderGame(&combinedShape, game->score);
 	DeleteShape(&combinedShape);
 	DeleteShape(&shape);
 }
 
-void Wait() {
-	// TODO: Dont use constant wait time, but start timer instead.
-	_delay_ms(TICK);
+void WaitTick(TetrisGame* game) {
+	inputEnabled = true;
+	// Init timer 5
+	TCCR5A=0b00000000;
+	TCCR5B=0b00000100;
+	TCNT5=30000;
+	TIMSK5=0b00000001;
+	sei();
+	while(inputEnabled) {
+		if (nextMove != NOOP && CanMove(game, nextMove)) {
+			Move(game, nextMove);
+			SendToDisplay(game);
+		}
+	}
 }
 
 TetrisGame InitTetrisGame() {
+	nextMove = NOOP;
 	Shape shape = CreateRandomShape();
 	Vector vector = {
 		.x = ((double) (MAX_COLUMNS - shape.columns) / 2),
@@ -79,7 +95,8 @@ TetrisGame InitTetrisGame() {
 	TetrisGame tetrisGame = {
 		.pile = CreateEmptyShape(MAX_ROWS, MAX_COLUMNS),
 		.shape = shape,
-		.vector = vector
+		.vector = vector,
+		.score = 0
 	};
 	
 	return tetrisGame;
@@ -91,24 +108,24 @@ void RunTetris() {
 	while(nextState != GAME_OVER) {
 		switch(nextState) {
 			case INIT: {
-				DisplayInit();
+				GraphicsInit();
 				game = InitTetrisGame();
 				nextState = UPDATE_DISPLAY;
 				break;
 			}
 			case UPDATE_DISPLAY: {
 				SendToDisplay(&game);
-				nextState = WAIT;
+				nextState = READY;
 				break;
 			}
-			case WAIT: {
-				Wait();
+			case READY: {
+				WaitTick(&game);
 				nextState = MOVE_DOWN;
 				break;
 			}
 			case MOVE_DOWN: {
-				if (CanMoveDown(&game)) {
-					MoveDown(&game);
+				if (CanMove(&game, DOWN)) {
+					Move(&game, DOWN);
 					nextState = UPDATE_DISPLAY;
 					} else {
 					nextState = CREATE_NEW_SHAPE;

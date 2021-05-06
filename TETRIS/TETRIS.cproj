@@ -150,6 +150,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="assets\font8x8_basic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="assets\font8x8_basic.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="blocks.c">
       <SubType>compile</SubType>
     </Compile>
@@ -162,7 +168,31 @@
     <Compile Include="display.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="graphics.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="graphics.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\block.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\color.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\direction.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\shape.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\tetris_game.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="models\vector.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="shapes.c">
@@ -177,6 +207,10 @@
     <Compile Include="tetris.h">
       <SubType>compile</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets" />
+    <Folder Include="models" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
