@@ -20,7 +20,7 @@ void GraphicsInit() {
 
 void DisplayGameOver() {
 	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, backgroundColor);
-	RenderText("GAME OVER", 24, 148, 3);
+	RenderText("GAME OVER", 12, 148, 3);
 }
 
 void RenderGame(Shape* shape, size_t score) {
