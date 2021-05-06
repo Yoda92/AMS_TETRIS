@@ -162,7 +162,7 @@ void prependColumns(Shape* shape, size_t amount)  {
 	shape->columns = shape->columns + amount;
 }
 
-void appendRows(Shape* shape, size_t amount) {
+void AppendRows(Shape* shape, size_t amount) {
 	Block* _matrix = CreateEmptyMatrix(shape->rows + amount, shape->columns);
 	for (size_t i = 0; i < (shape->rows * shape->columns); i++) {
 		_matrix[i] = shape->matrix[i];
@@ -172,7 +172,7 @@ void appendRows(Shape* shape, size_t amount) {
 	shape->rows = shape->rows + amount;
 }
 
-void appendColumns(Shape* shape, size_t amount)  {
+void AppendColumns(Shape* shape, size_t amount)  {
 	Block* _matrix = CreateEmptyMatrix(shape->rows, shape->columns + amount);
 	for(size_t y=0; y < shape->rows; y++) {
 		for(size_t x=0; x < shape->columns; x++) {
@@ -184,17 +184,64 @@ void appendColumns(Shape* shape, size_t amount)  {
 	shape->columns = shape->columns + amount;
 }
 
-void Shift(Shape* shape, Vector vector) {
+void RemoveRow(Shape* shape, size_t row)  {
+	Block* _matrix = CreateEmptyMatrix(shape->rows - 1, shape->columns);
+	for(size_t y=0; y < shape->rows; y++) {
+		if (y == row) {
+			continue;
+		}
+		for(size_t x=0; x < shape->columns; x++) {
+			_matrix[((y - (y > row ? 1 : 0)) * (shape->columns)) + x] = shape->matrix[(y * shape->columns) + x];
+		}
+	}
+	free(shape->matrix);
+	shape->matrix = _matrix;
+	shape->rows = shape->rows - 1;
+}
+
+bool IsRowComplete(Shape* shape, size_t row) {
+	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns); x++) {
+		if (shape->matrix[x] == EMPTY) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+void ShiftShape(Shape* shape, Vector vector) {
 	prependColumns(shape, vector.x);
 	PrependRows(shape, vector.y);
 }
 
+void ShiftVector(Vector* vector, Direction direction) {
+		switch (direction) {
+			case UP: {
+				vector->y = vector->y - 1;
+				break;
+			}
+			case DOWN: {
+				vector->y = vector->y + 1;
+				break;
+			}
+			case LEFT: {
+				vector->x = vector->x - 1;
+				break;
+			}
+			case RIGHT: {
+				vector->x = vector->x + 1;
+				break;
+			}
+			default: {}
+		}
+}
+
 void setSize(Shape* shape, size_t rows, size_t columns) {
 	if (rows > shape->rows) {
-		appendRows(shape, rows - shape->rows);
+		AppendRows(shape, rows - shape->rows);
 	}
 	if (columns > shape->columns) {
-		appendColumns(shape, columns - shape->columns);
+		AppendColumns(shape, columns - shape->columns);
 	}
 	Block* _matrix = CreateEmptyMatrix(rows, columns);
 	for(size_t y=0; y < rows; y++) {

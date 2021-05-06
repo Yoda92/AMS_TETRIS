@@ -6,23 +6,16 @@
  */ 
 
 
-#ifndef BLOCK_H_
-#define BLOCK_H_
+#ifndef BLOCKS_H_
+#define BLOCKS_H_
 
 #include <stdbool.h>
-
-typedef enum {
-	EMPTY,
-	RED,
-	GREEN,
-	BLUE, 
-	LIGHTBLUE, 
-	MAGENTA,
-	YELLOW,
-	ORANGE
-} Block;
+#include <stdlib.h>
+#include "models/block.h"
+#include "models/color.h"
 
 Block CombinesBlocks(Block, Block);
 bool CanCombine(Block, Block);
+Color GetRGBColor(Block);
 
-#endif /* BLOCK_H_ */
+#endif /* BLOCKS_H_ */

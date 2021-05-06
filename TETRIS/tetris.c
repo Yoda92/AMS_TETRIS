@@ -7,22 +7,27 @@
 
 #include "tetris.h"
 
-void MoveDown(TetrisGame* game) {
-	game->vector.y = game->vector.y + 1;
+ISR(TIMER5_OVF_vect)
+{
+	cli();
+	TCCR5B=0b00000000;
+	inputEnabled = false;
+}
+
+void Move(TetrisGame* game, Direction direction) {
+	ShiftVector(&game->vector, direction);
 }
 
 bool IsShapeOutOfBounds(Shape* shape) {
 	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS);
 }
 
-bool CanMoveDown(TetrisGame* game) {
+bool CanMove(TetrisGame* game, Direction direction) {
 	Shape nextShape = CopyShape(&game->shape);
-	Vector downMovement = {
-		.x = game->vector.x,
-		.y = game->vector.y + 1
-	};	
-	Shift(&nextShape, downMovement);
-	bool _canMoveDown = IsCombinePossible(&nextShape, &game->pile) && !IsShapeOutOfBounds(&nextShape);
+	Vector nextVector = { .x = game->vector.x, .y = game->vector.y};
+	ShiftVector(&nextVector, direction);
+	ShiftShape(&nextShape, nextVector);
+	bool _canMoveDown = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
 	DeleteShape(&nextShape);
 	return _canMoveDown;
 }
@@ -37,7 +42,7 @@ Vector CreateDefaultVector(TetrisGame* game) {
 
 bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
 	Shape _newShape = CopyShape(newShape);
-	Shift(&_newShape, CreateDefaultVector(game));
+	ShiftShape(&_newShape, CreateDefaultVector(game));
 	bool _canCreateNewShape = IsCombinePossible(&_newShape, &game->pile);
 	DeleteShape(&_newShape);
 	return _canCreateNewShape;
@@ -45,7 +50,7 @@ bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
 
 void SetNewShape(TetrisGame* game, Shape* newShape) {
 	Shape shape = CopyShape(&game->shape);
-	Shift(&shape, game->vector);
+	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
 	DeleteShape(&shape);
 	DeleteShape(&game->pile);
@@ -57,20 +62,34 @@ void SetNewShape(TetrisGame* game, Shape* newShape) {
 
 void SendToDisplay(TetrisGame* game) {
 	Shape shape = CopyShape(&game->shape);
-	Shift(&shape, game->vector);
+	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
-	Rotate(&combinedShape);
-	renderDisplay(combinedShape);
+	RenderGame(&combinedShape, game->score);
 	DeleteShape(&combinedShape);
 	DeleteShape(&shape);
 }
 
-void Wait() {
-	// TODO: Dont use constant wait time, but start timer instead.
-	_delay_ms(TICK);
+void StartTimer() {
+	TCCR5A=0b00000000;
+	TCCR5B=0b00000100;
+	TCNT5=30000;
+	TIMSK5=0b00000001;	
+}
+
+void WaitForInput(TetrisGame* game) {
+	inputEnabled = true;
+	StartTimer();
+	sei();
+	while(inputEnabled) {
+		if (nextMove != NOOP && CanMove(game, nextMove)) {
+			Move(game, nextMove);
+			SendToDisplay(game);
+		}
+	}
 }
 
 TetrisGame InitTetrisGame() {
+	nextMove = NOOP;
 	Shape shape = CreateRandomShape();
 	Vector vector = {
 		.x = ((double) (MAX_COLUMNS - shape.columns) / 2),
@@ -79,10 +98,22 @@ TetrisGame InitTetrisGame() {
 	TetrisGame tetrisGame = {
 		.pile = CreateEmptyShape(MAX_ROWS, MAX_COLUMNS),
 		.shape = shape,
-		.vector = vector
+		.vector = vector,
+		.score = 0
 	};
 	
 	return tetrisGame;
+}
+
+void RemoveCompleteRows(TetrisGame* game) {
+	size_t removedRows = 0;
+	for(int i = 0; i < game->shape.rows; i++) {
+		if(IsRowComplete(&game->pile, game->vector.y + i)) {
+			RemoveRow(&game->pile, game->vector.y + i);
+			removedRows++;
+		}
+	}
+	PrependRows(&game->pile, removedRows);
 }
 
 void RunTetris() {
@@ -91,28 +122,29 @@ void RunTetris() {
 	while(nextState != GAME_OVER) {
 		switch(nextState) {
 			case INIT: {
-				DisplayInit();
+				GraphicsInit();
 				game = InitTetrisGame();
 				nextState = UPDATE_DISPLAY;
 				break;
 			}
 			case UPDATE_DISPLAY: {
 				SendToDisplay(&game);
-				nextState = WAIT;
+				nextState = READY_FOR_INPUT;
 				break;
 			}
-			case WAIT: {
-				Wait();
-				nextState = MOVE_DOWN;
+			case READY_FOR_INPUT: {
+				WaitForInput(&game);
+				nextState = TRY_PUSH_DOWN;
 				break;
 			}
-			case MOVE_DOWN: {
-				if (CanMoveDown(&game)) {
-					MoveDown(&game);
+			case TRY_PUSH_DOWN: {
+				if (CanMove(&game, DOWN)) {
+					Move(&game, DOWN);
 					nextState = UPDATE_DISPLAY;
 					} else {
 					nextState = CREATE_NEW_SHAPE;
 				}
+				RemoveCompleteRows(&game);
 				break;				
 			}
 			case CREATE_NEW_SHAPE: {
