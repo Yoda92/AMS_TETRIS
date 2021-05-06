@@ -26,9 +26,9 @@ Direction nextMove;
 
 typedef enum {
 	INIT,
-	READY,
+	READY_FOR_INPUT,
 	UPDATE_DISPLAY,
-	MOVE_DOWN,
+	TRY_PUSH_DOWN,
 	CREATE_NEW_SHAPE,
 	GAME_OVER
 } TetrisState;

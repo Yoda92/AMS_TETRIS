@@ -69,13 +69,16 @@ void SendToDisplay(TetrisGame* game) {
 	DeleteShape(&shape);
 }
 
-void WaitTick(TetrisGame* game) {
-	inputEnabled = true;
-	// Init timer 5
+void StartTimer() {
 	TCCR5A=0b00000000;
 	TCCR5B=0b00000100;
 	TCNT5=30000;
-	TIMSK5=0b00000001;
+	TIMSK5=0b00000001;	
+}
+
+void WaitForInput(TetrisGame* game) {
+	inputEnabled = true;
+	StartTimer();
 	sei();
 	while(inputEnabled) {
 		if (nextMove != NOOP && CanMove(game, nextMove)) {
@@ -102,6 +105,17 @@ TetrisGame InitTetrisGame() {
 	return tetrisGame;
 }
 
+void RemoveCompleteRows(TetrisGame* game) {
+	size_t removedRows = 0;
+	for(int i = 0; i < game->shape.rows; i++) {
+		if(IsRowComplete(&game->pile, game->vector.y + i)) {
+			RemoveRow(&game->pile, game->vector.y + i);
+			removedRows++;
+		}
+	}
+	PrependRows(&game->pile, removedRows);
+}
+
 void RunTetris() {
 	TetrisState nextState = INIT;
 	TetrisGame game;
@@ -115,21 +129,22 @@ void RunTetris() {
 			}
 			case UPDATE_DISPLAY: {
 				SendToDisplay(&game);
-				nextState = READY;
+				nextState = READY_FOR_INPUT;
 				break;
 			}
-			case READY: {
-				WaitTick(&game);
-				nextState = MOVE_DOWN;
+			case READY_FOR_INPUT: {
+				WaitForInput(&game);
+				nextState = TRY_PUSH_DOWN;
 				break;
 			}
-			case MOVE_DOWN: {
+			case TRY_PUSH_DOWN: {
 				if (CanMove(&game, DOWN)) {
 					Move(&game, DOWN);
 					nextState = UPDATE_DISPLAY;
 					} else {
 					nextState = CREATE_NEW_SHAPE;
 				}
+				RemoveCompleteRows(&game);
 				break;				
 			}
 			case CREATE_NEW_SHAPE: {

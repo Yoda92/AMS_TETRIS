@@ -31,10 +31,13 @@ void FlipRows(Shape*);
 void Transpose(Shape*);
 void Rotate(Shape*);
 void PrependRows(Shape*, size_t);
+void AppendRows(Shape* shape, size_t amount);
 void ShiftShape(Shape*, Vector);
 Shape CopyShape(Shape*);
 bool IsCombinePossible(Shape*, Shape*);
 Shape CombineShapes(Shape*, Shape*);
 void NormalizeShapes(Shape*, Shape*);
+bool IsRowComplete(Shape* shape, size_t row);
+void RemoveRow(Shape* shape, size_t row);
 
 #endif /* SHAPES_H_ */
