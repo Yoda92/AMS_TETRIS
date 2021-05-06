@@ -10,8 +10,6 @@
 const Color backgroundColor = { .red = 0, .green = 0, .blue = 0 };
 const Color textColor = { .red = 255, .green = 255, .blue = 255 };
 const Color textBackgroundColor = { .red = 50, .green = 50, .blue = 125 };
-Shape referenceShape;
-size_t referenceScore;
 
 void GraphicsInit() {
 	DisplayInit();

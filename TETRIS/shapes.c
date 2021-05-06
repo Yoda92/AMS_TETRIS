@@ -209,7 +209,7 @@ bool isRowComplete(Shape* shape, size_t row) {
 	return true;
 }
 
-void Shift(Shape* shape, Vector vector) {
+void ShiftShape(Shape* shape, Vector vector) {
 	prependColumns(shape, vector.x);
 	PrependRows(shape, vector.y);
 }

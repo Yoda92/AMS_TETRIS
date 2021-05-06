@@ -23,6 +23,9 @@
 #define BLOCK_HEIGHT TETRIS_HEIGHT / BLOCK_COUNT_HEIGHT
 #define BLOCK_WIDTH SCREEN_WIDTH / BLOCK_COUNT_WIDTH
 
+Shape referenceShape;
+size_t referenceScore;
+
 void GraphicsInit();
 void RenderGame(Shape*, size_t);
 void RenderScore(size_t);

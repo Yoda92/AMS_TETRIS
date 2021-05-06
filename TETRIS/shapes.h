@@ -31,7 +31,7 @@ void FlipRows(Shape*);
 void Transpose(Shape*);
 void Rotate(Shape*);
 void PrependRows(Shape*, size_t);
-void Shift(Shape*, Vector);
+void ShiftShape(Shape*, Vector);
 Shape CopyShape(Shape*);
 bool IsCombinePossible(Shape*, Shape*);
 Shape CombineShapes(Shape*, Shape*);

@@ -26,7 +26,7 @@ bool CanMove(TetrisGame* game, Direction direction) {
 	Shape nextShape = CopyShape(&game->shape);
 	Vector nextVector = { .x = game->vector.x, .y = game->vector.y};
 	ShiftVector(&nextVector, direction);
-	Shift(&nextShape, nextVector);
+	ShiftShape(&nextShape, nextVector);
 	bool _canMoveDown = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
 	DeleteShape(&nextShape);
 	return _canMoveDown;
@@ -42,7 +42,7 @@ Vector CreateDefaultVector(TetrisGame* game) {
 
 bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
 	Shape _newShape = CopyShape(newShape);
-	Shift(&_newShape, CreateDefaultVector(game));
+	ShiftShape(&_newShape, CreateDefaultVector(game));
 	bool _canCreateNewShape = IsCombinePossible(&_newShape, &game->pile);
 	DeleteShape(&_newShape);
 	return _canCreateNewShape;
@@ -50,7 +50,7 @@ bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
 
 void SetNewShape(TetrisGame* game, Shape* newShape) {
 	Shape shape = CopyShape(&game->shape);
-	Shift(&shape, game->vector);
+	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
 	DeleteShape(&shape);
 	DeleteShape(&game->pile);
@@ -62,7 +62,7 @@ void SetNewShape(TetrisGame* game, Shape* newShape) {
 
 void SendToDisplay(TetrisGame* game) {
 	Shape shape = CopyShape(&game->shape);
-	Shift(&shape, game->vector);
+	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
 	RenderGame(&combinedShape, game->score);
 	DeleteShape(&combinedShape);
