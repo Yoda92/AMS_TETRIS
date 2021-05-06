@@ -1,4 +1,4 @@
-#include "xpt2046.h"
+#include "xpt2046ADC.h"
 #include <math.h>
 
 
