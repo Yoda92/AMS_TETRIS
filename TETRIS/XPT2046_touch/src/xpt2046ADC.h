@@ -14,7 +14,7 @@ struct ADC_read {
 };
 
 
-void init();
+
 
 // ADC related
 struct Coordinate coordFromADC(struct ADC_read reading);
