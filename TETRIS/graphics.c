@@ -7,10 +7,6 @@
 
 #include "graphics.h"
 
-const Color backgroundColor = { .red = 0, .green = 0, .blue = 0 };
-const Color textColor = { .red = 255, .green = 255, .blue = 255 };
-const Color textBackgroundColor = { .red = 50, .green = 50, .blue = 125 };
-
 void GraphicsInit() {
 	DisplayInit();
 	RenderBackground();
@@ -19,8 +15,8 @@ void GraphicsInit() {
 }
 
 void DisplayGameOver() {
-	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, backgroundColor);
-	RenderText("GAME OVER", 12, 148, 3);
+	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, rgbColors.black);
+	RenderText("GAME OVER", 12, 148, 3, rgbColors.white, rgbColors.black);
 }
 
 void RenderGame(Shape* shape, size_t score) {
@@ -38,7 +34,7 @@ char ReverseBits(char bits) {
 	return reverseBits;
 }
 
-void RenderText(char* text, size_t StartX, size_t StartY, size_t size) {
+void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color textColor, Color backgroundColor) {
 	for(int i = 0; i < strlen(text); i++) {
 		int asciiChar = (int) text[i];
 		char* character = font8x8_basic[asciiChar];
@@ -46,20 +42,20 @@ void RenderText(char* text, size_t StartX, size_t StartY, size_t size) {
 		for(int y = 0; y < 8; y++) {
 			swappedCharacter[y] = ReverseBits(character[y]);
 		}
-		DrawText(swappedCharacter, i * 8 * size + StartX, StartY, size, textColor, textBackgroundColor);
+		DrawText(swappedCharacter, i * 8 * size + StartX, StartY, size, textColor, backgroundColor);
 	}
 }
 
 void RenderBackground() {
-	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, backgroundColor);
-	FillRectangle(0, 0, SCREEN_WIDTH, SCORE_HEIGHT, textBackgroundColor);
+	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, rgbColors.black);
+	FillRectangle(0, 0, SCREEN_WIDTH, SCORE_HEIGHT, rgbColors.teal);
 }
 
 void RenderScore(size_t score) {
-	FillRectangle(0, 5, SCREEN_WIDTH, SCORE_HEIGHT - 10, textBackgroundColor);	
+	FillRectangle(0, 5, SCREEN_WIDTH, SCORE_HEIGHT - 10, rgbColors.teal);	
 	char _score[12];
 	sprintf(_score, "%d", score);
-	RenderText(_score, SCREEN_WIDTH - strlen(_score) * 5 * 8, 5, 5);
+	RenderText(_score, SCREEN_WIDTH - strlen(_score) * 5 * 8, 5, 5, rgbColors.white, rgbColors.teal);
 	referenceScore = score;
 }
 

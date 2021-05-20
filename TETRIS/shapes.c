@@ -6,51 +6,59 @@
 */
 #include "shapes.h"
 
-bool randomSeedSetFlag = false;
+struct {
+	Block t[6];
+	Block s[6];
+	Block z[6];
+	Block o[4];
+	Block l[6];
+	Block j[6];
+	Block i[4];
+} shapeMatrices = {
+	.t = { EMPTY, RED, EMPTY, RED, RED, RED },
+	.s = { EMPTY, MAGENTA, MAGENTA, MAGENTA, MAGENTA, EMPTY },
+	.z = { LIGHTBLUE, LIGHTBLUE, EMPTY, EMPTY, LIGHTBLUE, LIGHTBLUE },
+	.o = { YELLOW, YELLOW, YELLOW, YELLOW },
+	.l = { ORANGE, EMPTY, ORANGE, EMPTY, ORANGE, ORANGE },
+	.j = { EMPTY, GREEN, EMPTY, GREEN, GREEN, GREEN },
+	.i = { LIGHTBLUE, LIGHTBLUE, LIGHTBLUE, LIGHTBLUE }
+};
 
-Block t[] = { EMPTY, RED, EMPTY, RED, RED, RED };
-Block s[] = { EMPTY, MAGENTA, MAGENTA, MAGENTA, MAGENTA, EMPTY };
-Block z[] = { LIGHTBLUE, LIGHTBLUE, EMPTY, EMPTY, LIGHTBLUE, LIGHTBLUE };
-Block o[] = { YELLOW, YELLOW, YELLOW, YELLOW };
-Block l[] = { ORANGE, EMPTY, ORANGE, EMPTY, ORANGE, ORANGE };
-Block j[] = { EMPTY, GREEN, EMPTY, GREEN, GREEN, GREEN };
-Block i[] = { LIGHTBLUE, LIGHTBLUE, LIGHTBLUE, LIGHTBLUE };
-
-const Shape shapes[] = {
+const Shape defaultShapes[DEFAULT_COUNT] = {
 	{
 		.columns = 3,
 		.rows = 2,
-		.matrix = t
+		.matrix = shapeMatrices.t
 	},
 	{
 		.columns = 3,
 		.rows = 2,
-		.matrix = s
+		.matrix = shapeMatrices.s
 	},
 	{
 		.columns = 3,
 		.rows = 2,
-		.matrix = z
+		.matrix = shapeMatrices.z
 	},
 	{
 		.columns = 2,
 		.rows = 2,
-		.matrix = o
+		.matrix = shapeMatrices.o
 	},
 	{
 		.columns = 2,
 		.rows = 3,
-		.matrix = l
+		.matrix = shapeMatrices.l
 	},
 	{
 		.columns = 2,
 		.rows = 3,
-		.matrix = j
+		.matrix = shapeMatrices.j
 	},
 	{
 		.columns = 4,
 		.rows = 1,
-		.matrix = i
+		.matrix = shapeMatrices.i
 	}
 };
 
@@ -90,10 +98,7 @@ Shape CreateEmptyShape(size_t rows, size_t columns) {
 }
 
 void setRandomSeed() {
-	if (!randomSeedSetFlag) {
-		// TODO: read analog input and set seed value
-		randomSeedSetFlag = true;
-	}
+	// TODO: read analog input and set seed value
 }
 
 int createRandomNumber() {
@@ -102,7 +107,7 @@ int createRandomNumber() {
 }
 
 Shape CreateRandomShape() {
-	const Shape* _randomShape = &shapes[createRandomNumber()];
+	const Shape* _randomShape = &defaultShapes[createRandomNumber()];
 	Shape output = CreateEmptyShape(_randomShape->rows, _randomShape->columns);
 	copyMatrix(_randomShape->matrix, output.matrix, _randomShape->rows, _randomShape->columns);
 	

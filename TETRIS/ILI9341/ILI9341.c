@@ -1,14 +1,8 @@
-/*
- * display.c
- *
- * Created: 15/04/2021 09.03.27
- *  Author: bbend
- */ 
 #include <avr/io.h>
 #include <avr/cpufunc.h>
 #define F_CPU 16000000
 #include <util/delay.h>
-#include "display.h"
+#include "ILI9341.h"
 
 // Data port definitions:
 #define DATA_PORT_HIGH PORTA
@@ -172,43 +166,5 @@ void DrawText(char bitmap[8], unsigned int StartX, unsigned int StartY, size_t s
 				WritePixel(backgroundColor);
 			}
 		}
-	}	
+	}
 }
-
-//void DrawTest(unsigned char bitmap[], size_t width, size_t height) {
-	//SetPageAddress(0, height - 1);
-	//SetColumnAddress(0, width - 1);
-	//MemoryWrite();
-	//for(size_t i = 0; i < height; i++) {
-		//for(size_t y = 0; y < width; y++) {
-			//if (0b10000000 >> (y % 8) & bitmap[i]) {
-				//WritePixel(0, 0, 0);
-				//} else {
-				//WritePixel(255, 255, 255);
-			//}			
-		//}
-	//}
-//}
-//
-//void DrawBitmap(unsigned char bitmap[]) {
-	//size_t width = bitmap[0];
-	//size_t height = bitmap[1];
-	//size_t rowByteOffset = 8 - (width % 8);
-	//size_t currentIndex;
-	//size_t skip;
-	//SetPageAddress(0, height - 1);
-	//SetColumnAddress(0, width - 1);
-	//MemoryWrite();
-	//for(size_t i = 0; i < height; i++) {
-		//skip = rowByteOffset * i;
-		//for(size_t y = 0; y < width; y++) {
-			//currentIndex = i * width + y + skip;
-			//if ((0b10000000 >> ((currentIndex) % 8)) & bitmap[3 + (currentIndex >> 3)]) {
-				//WritePixel(0, 0, 0);
-				//} else {
-				//WritePixel(255, 255, 255);
-			//}		
-		//}
-	//}
-//}
-

@@ -1,12 +1,16 @@
 /*
- * display.h
+ * ILI9341.h
  *
- * Created: 15/04/2021 09.03.40
- *  Author: bbend
+ * Created: 14-05-2021 09:05:41
+ *  Author: ander
  */ 
 
+
+#ifndef ILI9341_H_
+#define ILI9341_H_
+
 #include <stdio.h>
-#include "models/color.h"
+#include "../models/color.h"
 
 // Game height and width based on 20 rows and 10 columns
 #define SCREEN_HEIGHT 320
@@ -28,4 +32,4 @@ void DrawBitmap(unsigned char[8]);
 void DrawTest(unsigned char[], size_t width, size_t height);
 void DrawText(char bitmap[], unsigned int StartX, unsigned int StartY, size_t factor, Color, Color);
 
-
+#endif /* ILI9341_H_ */

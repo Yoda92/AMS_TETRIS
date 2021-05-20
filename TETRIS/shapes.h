@@ -20,7 +20,7 @@
 #include "models/vector.h"
 #include "models/direction.h"
 
-const Shape shapes[DEFAULT_COUNT];
+const Shape defaultShapes[DEFAULT_COUNT];
 
 void ShiftVector(Vector*, Direction);
 Block* CreateEmptyMatrix(size_t, size_t);

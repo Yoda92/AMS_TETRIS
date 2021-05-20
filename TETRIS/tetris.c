@@ -9,9 +9,16 @@
 
 ISR(TIMER5_OVF_vect)
 {
-	cli();
 	TCCR5B=0b00000000;
 	inputEnabled = false;
+}
+
+ISR(INT4_vect)
+{
+	EIMSK &= 0b11101111; // Disable interrupt 4
+	EIFR |= 0b00010000; // Set interrupt 4 flag
+	nextMove = RIGHT;
+	EIMSK |= 0b00010000; // Enable interrupt 4
 }
 
 void Move(TetrisGame* game, Direction direction) {
@@ -76,16 +83,29 @@ void StartTimer() {
 	TIMSK5=0b00000001;	
 }
 
+void InitTouchInterrupt()
+{
+	DDRE &= 0b11101111;
+	EIMSK |= 0b00010000; //Activate interrupt 4.
+	EICRA = 0b00000000;
+	EICRB = 0b00000010; //rising edge activation of interrupt 4.
+}
+
 void WaitForInput(TetrisGame* game) {
-	inputEnabled = true;
-	StartTimer();
 	sei();
+	StartTimer();
+	inputEnabled = true;
 	while(inputEnabled) {
 		if (nextMove != NOOP && CanMove(game, nextMove)) {
+			cli();
 			Move(game, nextMove);
 			SendToDisplay(game);
+			nextMove = NOOP;
+			sei();
 		}
 	}
+	cli();
+	nextMove = NOOP;
 }
 
 TetrisGame InitTetrisGame() {
@@ -124,6 +144,7 @@ void RunTetris() {
 			case INIT: {
 				GraphicsInit();
 				game = InitTetrisGame();
+				InitTouchInterrupt();
 				nextState = UPDATE_DISPLAY;
 				break;
 			}

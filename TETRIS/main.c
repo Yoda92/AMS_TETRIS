@@ -5,10 +5,7 @@
  * Author : ander
  */ 
 
-#include <avr/io.h>
 #include "tetris.h"
-#include "display.h"
-#include "shapes.h"
 
 int main(void)
 {

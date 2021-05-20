@@ -9,11 +9,11 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#include "display.h"
+#include "ILI9341/ILI9341.h"
 #include <string.h>
 #include <stdio.h>
 #include "shapes.h"
-#include "models/color.h"
+#include "colors.h"
 #include "assets/font8x8_basic.h"
 
 #define TETRIS_HEIGHT 270
@@ -32,6 +32,6 @@ void RenderGame(Shape*, size_t);
 void RenderScore(size_t);
 void RenderTetris(Shape*);
 void RenderBackground();
-void RenderText(char* text, size_t StartX, size_t StartY, size_t size);
+void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color, Color);
 
 #endif /* GRAPHICS_H_ */

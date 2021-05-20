@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "models/block.h"
-#include "models/color.h"
+#include "colors.h"
 
 Block CombinesBlocks(Block, Block);
 bool CanCombine(Block, Block);
