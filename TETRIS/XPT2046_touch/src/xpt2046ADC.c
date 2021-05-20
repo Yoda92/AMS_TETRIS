@@ -8,10 +8,7 @@
 #define MASTER_IN_PIN 0
 #define SPI_CLOCK_PIN 0
 
-void init()
-{
 
-}
 
 
 // ADC related
@@ -30,11 +27,6 @@ float fractionFromADC(unsigned int ADC_val)
 
 unsigned int dimensionFromFraction(float fraction, unsigned int maxDimension)
 {
-    (unsigned int)round(fraction*(float)maxDimension);
+    return (unsigned int)round(fraction*(float)maxDimension);
 }
 
-// SPI related
-struct ADC_read readADC()
-{
-
-}

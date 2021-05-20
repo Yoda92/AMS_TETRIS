@@ -48,24 +48,26 @@ void onScreenPressed(unsigned int *X, unsigned int *Y, unsigned int *Z)
 unsigned int readTwoBytes(unsigned char command)
 {
     //Read two bytes
-    unsigned int MSByte = (unsigned int)readWriteByte(command);
+    readWriteByte(command);
+    unsigned int MSByte = (unsigned int)readWriteByte(0);
     unsigned int LSByte = (unsigned int)readWriteByte(0);
     unsigned int combined = (MSByte << 8) & LSByte;
+    return combined;
 }
 
 unsigned int readX()
 {
-    return readTwoBytes(READ_X);
+    return readTwoBytes(READ_X<<3);
 }
 
 unsigned int readY()
 {
-    return readTwoBytes(READ_Y);
+    return readTwoBytes(READ_Y<<3);
 }
 
 unsigned int readZ()
 {
-    return readTwoBytes(READ_Z);
+    return readTwoBytes(READ_Z<<3);
 }
 
 void initInterrupt()

@@ -8,7 +8,7 @@
 ISR(INT4_vect)
 {
   FillRectangle(140, 0, 320 - 140, 100, 31, 0, 20);
-  
+
   unsigned int Z_adc;
 
   struct ADC_read reading;
@@ -16,15 +16,13 @@ ISR(INT4_vect)
   unsigned int x;
   unsigned int y;
 
-  onScreenPressed(&x,y, &Z_adc);
+  onScreenPressed(&x, &y, &Z_adc);
 
   reading.x = x;
   reading.y = y;
   struct Coordinate coordinate = coordFromADC(reading);
   FillRectangle(coordinate.x, 5, coordinate.y, 5, 31, 0, 20);
 }
-
-
 
 void setup()
 {
@@ -44,4 +42,10 @@ void setup()
 
 void loop()
 {
+  //delay(5);
+  //struct ADC_read reading;
+  //unsigned int Z_adc;
+  //onScreenPressed(&reading.x, &reading.y, &Z_adc);
+  //struct Coordinate coordinate = coordFromADC(reading);
+  //FillRectangle(coordinate.x, 5, coordinate.y, 5, 0, 0, 10);
 }

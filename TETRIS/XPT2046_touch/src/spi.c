@@ -143,7 +143,7 @@ unsigned char readWriteByte(unsigned char writeThis)
     setChipSelect(LOW);
     setClock(LOW);
     // For each bit in byte
-    for (unsigned char i = 0; i < 8; i++)
+    for (unsigned char i = 0; i < 8; i++)           
     {
         setMasterOutValue(getMSB(buf));
         buf = buf << 1;
