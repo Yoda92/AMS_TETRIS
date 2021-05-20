@@ -26,7 +26,7 @@ void Move(TetrisGame* game, Direction direction) {
 }
 
 bool IsShapeOutOfBounds(Shape* shape) {
-	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS);
+	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS || shape->columns < 0 || shape->rows < 0);
 }
 
 bool CanMove(TetrisGame* game, Direction direction) {
