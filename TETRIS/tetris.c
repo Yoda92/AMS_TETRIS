@@ -7,6 +7,8 @@
 
 #include "tetris.h"
 
+Direction GetTouchDirection();
+
 ISR(TIMER5_OVF_vect)
 {
 	TCCR5B=0b00000000;
@@ -16,9 +18,15 @@ ISR(TIMER5_OVF_vect)
 ISR(INT4_vect)
 {
 	EIMSK &= 0b11101111; // Disable interrupt 4
+	nextMove = GetTouchDirection();
 	EIFR |= 0b00010000; // Set interrupt 4 flag
-	nextMove = RIGHT;
 	EIMSK |= 0b00010000; // Enable interrupt 4
+}
+
+Direction GetTouchDirection() {
+	unsigned char x = getTouchCoordinates();
+	inputReceived = false;	
+	return x > 125 ? RIGHT : LEFT;
 }
 
 void Move(TetrisGame* game, Direction direction) {
@@ -26,7 +34,7 @@ void Move(TetrisGame* game, Direction direction) {
 }
 
 bool IsShapeOutOfBounds(Shape* shape) {
-	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS || shape->columns < 0 || shape->rows < 0);
+	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS);
 }
 
 bool CanMove(TetrisGame* game, Direction direction) {
@@ -127,13 +135,14 @@ TetrisGame InitTetrisGame() {
 
 void RemoveCompleteRows(TetrisGame* game) {
 	size_t removedRows = 0;
-	for(int i = 0; i < game->shape.rows; i++) {
-		if(IsRowComplete(&game->pile, game->vector.y + i)) {
-			RemoveRow(&game->pile, game->vector.y + i);
+	for(int i = 0; i < game->pile.rows; i++) {
+		if(IsRowComplete(&game->pile, i)) {
+			RemoveRow(&game->pile, i);
 			removedRows++;
 		}
 	}
 	PrependRows(&game->pile, removedRows);
+	game->score += removedRows;
 }
 
 void RunTetris() {
@@ -144,7 +153,7 @@ void RunTetris() {
 			case INIT: {
 				GraphicsInit();
 				game = InitTetrisGame();
-				InitTouchInterrupt();
+				initReader();
 				nextState = UPDATE_DISPLAY;
 				break;
 			}
@@ -165,13 +174,13 @@ void RunTetris() {
 					} else {
 					nextState = CREATE_NEW_SHAPE;
 				}
-				RemoveCompleteRows(&game);
 				break;				
 			}
 			case CREATE_NEW_SHAPE: {
 				Shape nextShape = CreateRandomShape();
 				if (CanCreateNewShape(&game, &nextShape)) {
 					SetNewShape(&game, &nextShape);
+					RemoveCompleteRows(&game);
 					nextState = UPDATE_DISPLAY;
 					} else {
 					DeleteShape(&nextShape);

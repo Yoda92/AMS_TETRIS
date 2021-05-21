@@ -20,8 +20,11 @@
 #include "models/direction.h"
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include "XPT2046/xpt2046reader.h"
+#include "XPT2046/xpt2046ADC.h"
 
 bool inputEnabled;
+bool inputReceived;
 Direction nextMove;
 
 typedef enum {

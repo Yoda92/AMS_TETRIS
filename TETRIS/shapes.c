@@ -205,7 +205,7 @@ void RemoveRow(Shape* shape, size_t row)  {
 }
 
 bool IsRowComplete(Shape* shape, size_t row) {
-	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns); x++) {
+	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns - 1); x++) {
 		if (shape->matrix[x] == EMPTY) {
 			return false;
 		}
@@ -222,7 +222,9 @@ void ShiftShape(Shape* shape, Vector vector) {
 void ShiftVector(Vector* vector, Direction direction) {
 		switch (direction) {
 			case UP: {
-				vector->y = vector->y - 1;
+				if (vector->y > 0) {
+					vector->y = vector->y - 1;
+				}
 				break;
 			}
 			case DOWN: {
@@ -230,7 +232,9 @@ void ShiftVector(Vector* vector, Direction direction) {
 				break;
 			}
 			case LEFT: {
-				vector->x = vector->x - 1;
+				if (vector->x > 0) {
+					vector->x = vector->x - 1;
+				}
 				break;
 			}
 			case RIGHT: {
