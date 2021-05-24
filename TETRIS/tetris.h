@@ -23,9 +23,9 @@
 #include "XPT2046/xpt2046reader.h"
 #include "XPT2046/xpt2046ADC.h"
 
-bool inputEnabled;
-bool inputReceived;
-Direction nextMove;
+volatile bool inputEnabled;
+volatile bool inputReceived;
+volatile Direction nextMove;
 
 typedef enum {
 	INIT,
