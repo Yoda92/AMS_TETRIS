@@ -133,6 +133,11 @@ void RemoveCompleteRows(TetrisGame* game) {
 	game->score += removedRows;
 }
 
+void DeleteGame(TetrisGame* game) {
+	DeleteShape(&game->pile);
+	DeleteShape(&game->shape);
+}
+
 /****************************************************************************************************/
 /***************************************** Interrupt Methods ******************************************/
 /****************************************************************************************************/
@@ -199,5 +204,7 @@ void RunTetris() {
 		}
 	}
 	UpdateGraphics(&game);
+	DeleteGame(&game);
 	DisplayGameOver();
+	_delay_ms(2000);
 }
