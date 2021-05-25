@@ -1,58 +1,28 @@
-/*
- * graphics.c
- *
- * Created: 22-04-2021 09:06:28
- *  Author: ander
- */ 
-
 #include "graphics.h"
 
-void GraphicsInit() {
-	DisplayInit();
-	RenderBackground();
-	RenderScore(0);
-	referenceShape = CreateEmptyShape(BLOCK_COUNT_HEIGHT, BLOCK_COUNT_WIDTH);
-}
+/****************************************************************************************************/
+/****************************************** Private Methods ******************************************/
+/****************************************************************************************************/
 
-void DisplayGameOver() {
-	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, rgbColors.black);
-	RenderText("GAME OVER", 12, 148, 3, rgbColors.white, rgbColors.black);
-}
-
-void RenderGame(Shape* shape, size_t score) {
-	if (score != referenceScore) {
-		RenderScore(score);
-	}
-	RenderTetris(shape);
-}
+char ReverseBits(char bits);
+void RenderScore(size_t score);
+void RenderTetris(Shape* shape);
+void RenderScoreBackground();
 
 char ReverseBits(char bits) {
 	char reverseBits = 0b00000000;
 	for(int i = 0; i < 8; i++) {
 		reverseBits |= ((bits >> i) & 1) << (7 - i);
-	}	
+	}
 	return reverseBits;
 }
 
-void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color textColor, Color backgroundColor) {
-	for(int i = 0; i < strlen(text); i++) {
-		int asciiChar = (int) text[i];
-		char* character = font8x8_basic[asciiChar];
-		char swappedCharacter[8];
-		for(int y = 0; y < 8; y++) {
-			swappedCharacter[y] = ReverseBits(character[y]);
-		}
-		DrawText(swappedCharacter, i * 8 * size + StartX, StartY, size, textColor, backgroundColor);
-	}
-}
-
-void RenderBackground() {
-	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, rgbColors.black);
+void RenderScoreBackground() {
 	FillRectangle(0, 0, SCREEN_WIDTH, SCORE_HEIGHT, rgbColors.teal);
 }
 
 void RenderScore(size_t score) {
-	FillRectangle(0, 5, SCREEN_WIDTH, SCORE_HEIGHT - 10, rgbColors.teal);	
+	FillRectangle(0, 5, SCREEN_WIDTH, SCORE_HEIGHT - 10, rgbColors.teal);
 	char _score[12];
 	sprintf(_score, "%d", score);
 	RenderText(_score, SCREEN_WIDTH - strlen(_score) * 5 * 8, 5, 5, rgbColors.white, rgbColors.teal);
@@ -70,4 +40,47 @@ void RenderTetris(Shape* shape)
 	}
 	DeleteShape(&referenceShape);
 	referenceShape = CopyShape(shape);
+}
+
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+void RenderBackground() {
+	FillRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, rgbColors.black);
+}
+
+void InitGraphics() {
+	IL19341Init();
+}
+
+void InitTetrisGraphics() {
+	RenderBackground();
+	RenderScoreBackground();
+	RenderScore(0);
+	referenceShape = CreateEmptyShape(BLOCK_COUNT_HEIGHT, BLOCK_COUNT_WIDTH);
+}
+
+void DisplayGameOver() {
+	RenderBackground();
+	RenderText("GAME OVER", 12, 148, 3, rgbColors.white, rgbColors.black);
+}
+
+void RenderGame(Shape* shape, size_t score) {
+	if (score != referenceScore) {
+		RenderScore(score);
+	}
+	RenderTetris(shape);
+}
+
+void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color textColor, Color backgroundColor) {
+	for(int i = 0; i < strlen(text); i++) {
+		int asciiChar = (int) text[i];
+		char* character = font8x8_basic[asciiChar];
+		char swappedCharacter[8];
+		for(int y = 0; y < 8; y++) {
+			swappedCharacter[y] = ReverseBits(character[y]);
+		}
+		DrawBitmap(swappedCharacter, i * 8 * size + StartX, StartY, size, textColor, backgroundColor);
+	}
 }

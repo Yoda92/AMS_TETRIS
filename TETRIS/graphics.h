@@ -1,17 +1,9 @@
-/*
- * graphics.h
- *
- * Created: 22-04-2021 09:06:41
- *  Author: ander
- */ 
-
-
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#include "ILI9341/ILI9341.h"
 #include <string.h>
 #include <stdio.h>
+#include "ILI9341/ILI9341.h"
 #include "shapes.h"
 #include "colors.h"
 #include "assets/font8x8_basic.h"
@@ -27,11 +19,10 @@ Shape referenceShape;
 size_t referenceScore;
 
 void DisplayGameOver();
-void GraphicsInit();
-void RenderGame(Shape*, size_t);
-void RenderScore(size_t);
-void RenderTetris(Shape*);
 void RenderBackground();
-void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color, Color);
+void InitGraphics();
+void InitTetrisGraphics();
+void RenderGame(Shape* shape, size_t score);
+void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color textColor, Color backgroundColor);
 
 #endif /* GRAPHICS_H_ */

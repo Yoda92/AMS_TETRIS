@@ -1,10 +1,3 @@
-/*
- * colors.c
- *
- * Created: 14-05-2021 10:25:48
- *  Author: ander
- */ 
-
 #include "colors.h"
 
 const RGBColors rgbColors = {

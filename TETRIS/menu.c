@@ -1,13 +1,44 @@
-/*
- * menu.c
- *
- * Created: 20-05-2021 09:57:25
- *  Author: ander
- */ 
-
 #include "menu.h"
-#include "tetris.h"
 
-void StartMenu() {
+/****************************************************************************************************/
+/****************************************** Private Methods ******************************************/
+/****************************************************************************************************/
+
+void RenderLogo() {;
+	char* tetris = "TETRIS";
+	for (int i = 0; tetris[i] != '\0'; i++) {
+		RenderText(&tetris[i], 24 + i * 8 * 4 , 24, 4, rgbColors.yellow, rgbColors.black);
+	}
+}
+
+void CreateButtons() {
+	FillRectangle(24, 80, 192, 64, rgbColors.teal);
+	RenderText("New Game", 56, 104, 2, rgbColors.white, rgbColors.teal);
+	FillRectangle(24, 168, 192, 64, rgbColors.teal);
+	RenderText("High scores", 32, 192, 2, rgbColors.white, rgbColors.teal);
+}
+
+void InitMenu() {;
+	InitGraphics();
+	RenderBackground();
+	RenderLogo();
+	CreateButtons();
+	sei();
+	StartTimer(3);
+	while(!IsTimerComplete) {
+		
+	}
+	RunTetris();
+}
+
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+void RunMenu() {
+	InitMenu();
+	while(1) {
+		
+	}
 	RunTetris();
 }
