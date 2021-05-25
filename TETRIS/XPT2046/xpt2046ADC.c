@@ -1,12 +1,8 @@
 #include "xpt2046ADC.h"
 #include <math.h>
+#include "xpt2046Types.h"
 
 
-#define TOUCH_INTERRUPT_PIN 0
-#define CHIP_SELECT_PIN 0
-#define MASTER_OUT_PIN 0
-#define MASTER_IN_PIN 0
-#define SPI_CLOCK_PIN 0
 
 
 
@@ -16,13 +12,13 @@ struct Coordinate coordFromADC(struct ADC_read reading)
 {
     struct Coordinate coord;
     coord.x = dimensionFromFraction(fractionFromADC(reading.x),X_DIMENSION);
-    coord.y = dimensionFromFraction(fractionFromADC(reading.y),Y_DIMENSION);
+    coord.y = Y_DIMENSION - dimensionFromFraction(fractionFromADC(reading.y),Y_DIMENSION);
     return coord;
 }
 
 float fractionFromADC(unsigned int ADC_val)
 {
-    return (float)ADC_val / (float)ADC_MAXVAL;
+    return ((float)ADC_val) / ((float)ADC_MAXVAL);
 }
 
 unsigned int dimensionFromFraction(float fraction, unsigned int maxDimension)

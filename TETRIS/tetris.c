@@ -11,10 +11,12 @@ Direction GetTouchDirection();
 
 ISR(TIMER5_OVF_vect)
 {
+	//StartGameStepTimer triggers this
 	TCCR5B=0b00000000;
 	inputEnabled = false;
 }
 
+/*
 ISR(INT4_vect)
 {
 	EIMSK &= 0b11101111; // Disable interrupt 4
@@ -22,7 +24,7 @@ ISR(INT4_vect)
 	EIFR |= 0b00010000; // Set interrupt 4 flag
 	EIMSK |= 0b00010000; // Enable interrupt 4
 }
-
+*/
 Direction GetTouchDirection() {
 	unsigned char x = getTouchCoordinates();
 	inputReceived = false;	
@@ -84,24 +86,17 @@ void SendToDisplay(TetrisGame* game) {
 	DeleteShape(&shape);
 }
 
-void StartTimer() {
+void StartGameStepTimer() {
 	TCCR5A=0b00000000;
 	TCCR5B=0b00000100;
 	TCNT5=30000;
 	TIMSK5=0b00000001;	
 }
 
-void InitTouchInterrupt()
-{
-	DDRE &= 0b11101111;
-	EIMSK |= 0b00010000; //Activate interrupt 4.
-	EICRA = 0b00000000;
-	EICRB = 0b00000010; //rising edge activation of interrupt 4.
-}
 
 void WaitForInput(TetrisGame* game) {
 	sei();
-	StartTimer();
+	StartGameStepTimer();
 	inputEnabled = true;
 	while(inputEnabled) {
 		if (nextMove != NOOP && CanMove(game, nextMove)) {

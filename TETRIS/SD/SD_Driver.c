@@ -290,7 +290,6 @@ unsigned char SD_writeSingleBlock(unsigned long startBlock, unsigned char* ptr)
 
 //// Test of SD driver (main.c)
 //#include <avr/io.h>
-//#define F_CPU 16000000
 //#include <util/delay.h>
 //#include "SD_Driver.h"
 //#include "uart.h"
