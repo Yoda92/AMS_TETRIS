@@ -11,47 +11,85 @@
 #define MAX_Y 320
 
 // Bottom left third of the screen
-struct Rectangle moveLeftArea = (struct Rectangle){
-    .topLeft = (struct Coordinate){.x = 0, .y = MIDDLE_Y},
-    .bottomRight = (struct Coordinate){.x = ONE_THIRD_X, .y = MAX_Y}};
+struct Rectangle moveLeftArea = {
+    .topLeftX = 0,
+    .topLeftY = MIDDLE_Y,
+    .bottomRightX = ONE_THIRD_X,
+    .bottomRightY = MAX_Y};
 
 // Bottom right third of the screen
-struct Rectangle moveRightArea = (struct Rectangle){
-    .topLeft = (struct Coordinate){.x = TWO_THIRDS_X, .y = MIDDLE_Y},
-    .bottomRight = (struct Coordinate){.x = MAX_X, .y = MAX_Y}};
+struct Rectangle moveRightArea = {
+    .topLeftX = TWO_THIRDS_X,
+    .topLeftY = MIDDLE_Y,
+    .bottomRightX = MAX_X,
+    .bottomRightY = MAX_Y};
 
 // Bottom middle third of the screen
-struct Rectangle dropToBottomArea = (struct Rectangle){
-    .topLeft = (struct Coordinate){.x = ONE_THIRD_X, .y = MIDDLE_Y},
-    .bottomRight = (struct Coordinate){.x = TWO_THIRDS_X, .y = MAX_Y}};
+struct Rectangle moveDownArea = {
+    .topLeftX = ONE_THIRD_X,
+    .topLeftY = MIDDLE_Y,
+    .bottomRightX = TWO_THIRDS_X,
+    .bottomRightY = MAX_Y};
 
-// Top left half of the screen
-struct Rectangle rotateLeftArea = (struct Rectangle){
-    .topLeft = (struct Coordinate){.x = 0, .y = 0},
-    .bottomRight = (struct Coordinate){.x = MIDDLE_X, .y = MIDDLE_Y}};
 
-// Top right half of the screen
-struct Rectangle rotateRightArea = (struct Rectangle){
-    .topLeft = (struct Coordinate){.x = MIDDLE_X, .y = 0},
-    .bottomRight = (struct Coordinate){.x = MAX_X, .y = MIDDLE_Y}};
+// Top  half of the screen
+struct Rectangle rotateArea = {
+    .topLeftX = 0,
+    .topLeftY = 0,
+    .bottomRightX = MAX_X,
+    .bottomRightY = MIDDLE_Y};
 
-PlayerAction ActionFromCoordinate(struct Coordinate coord){
-    if (isCoordInRect(coord,moveLeftArea)){return MOVE_LEFT;}
-    if (isCoordInRect(coord,moveRightArea)){return MOVE_RIGHT;}
-    if (isCoordInRect(coord,dropToBottomArea)){return DROP_TO_BOTTOM;}
-    if (isCoordInRect(coord,rotateLeftArea)){return ROTATE_LEFT;}
-    if (isCoordInRect(coord,rotateRightArea)){return ROTATE_RIGHT;}
-}
 
 int isCoordInRect(struct Coordinate coord, struct Rectangle rect)
 {
     // Check if coord exeeds bounds of rect.
-    if (coord.x <= rect.topLeft.x ||
-        coord.y <= rect.topLeft.y ||
-        coord.x > rect.bottomRight.x ||
-        coord.y > rect.bottomRight.y)
+    if (coord.x <= rect.topLeftX ||
+        coord.y <= rect.topLeftY ||
+        coord.x > rect.bottomRightX ||
+        coord.y > rect.bottomRightY)
     {
         return 0;
     }
     return 1;
+}
+
+PlayerAction actionFromCoordinate(struct Coordinate coord)
+{
+    if (isCoordInRect(coord, moveLeftArea))
+    {
+        return MOVE_LEFT;
+    }
+    if (isCoordInRect(coord, moveRightArea))
+    {
+        return MOVE_RIGHT;
+    }
+    if (isCoordInRect(coord, moveDownArea))
+    {
+        return DROP_TO_BOTTOM;
+    }
+    if (isCoordInRect(coord, rotateArea))
+    {
+        return ROTATE;
+    }
+    return -1;
+}
+
+
+
+Direction getDirectionFromAction(PlayerAction action)
+{
+    switch (action)
+    {
+    case MOVE_LEFT:
+        return LEFT;
+
+    case MOVE_RIGHT:
+        return RIGHT;
+
+    case DROP_TO_BOTTOM:
+        return DOWN;
+
+    default:
+        return NOOP;
+    }
 }

@@ -6,8 +6,10 @@ struct Coordinate {
 
 struct Rectangle
 {
-    struct Coordinate topLeft;
-    struct Coordinate bottomRight;
+    unsigned int topLeftX;
+    unsigned int topLeftY;
+    unsigned int bottomRightX;
+    unsigned int bottomRightY;
 };
 
 struct ADC_read {

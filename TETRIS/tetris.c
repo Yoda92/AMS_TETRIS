@@ -6,29 +6,15 @@
 */
 
 #include "tetris.h"
+#include "XPT2046/xpt2046tetris.h"
 
-Direction GetTouchDirection();
+
 
 ISR(TIMER5_OVF_vect)
 {
 	//StartGameStepTimer triggers this
 	TCCR5B=0b00000000;
 	inputEnabled = false;
-}
-
-/*
-ISR(INT4_vect)
-{
-	EIMSK &= 0b11101111; // Disable interrupt 4
-	nextMove = GetTouchDirection();
-	EIFR |= 0b00010000; // Set interrupt 4 flag
-	EIMSK |= 0b00010000; // Enable interrupt 4
-}
-*/
-Direction GetTouchDirection() {
-	unsigned char x = getTouchCoordinates();
-	inputReceived = false;	
-	return x > 125 ? RIGHT : LEFT;
 }
 
 void Move(TetrisGame* game, Direction direction) {
@@ -99,16 +85,21 @@ void WaitForInput(TetrisGame* game) {
 	StartGameStepTimer();
 	inputEnabled = true;
 	while(inputEnabled) {
-		if (nextMove != NOOP && CanMove(game, nextMove)) {
+		if (actionReady){
+			PlayerAction action = readLatestPlayerAction();
 			cli();
-			Move(game, nextMove);
-			SendToDisplay(game);
-			nextMove = NOOP;
+			if (action == ROTATE && canRotate(game)){
+				Rotate(game->shape);
+				SendToDisplay(game);
+			}
+			else if (action != ROTATE && CanMove(game, getDirectionFromAction(action))){
+				Move(game, nextMove);
+				SendToDisplay(game);
+			}
 			sei();
 		}
 	}
 	cli();
-	nextMove = NOOP;
 }
 
 TetrisGame InitTetrisGame() {
@@ -148,7 +139,7 @@ void RunTetris() {
 			case INIT: {
 				GraphicsInit();
 				game = InitTetrisGame();
-				initReader();
+				initXPT2046Tetris();
 				nextState = UPDATE_DISPLAY;
 				break;
 			}
