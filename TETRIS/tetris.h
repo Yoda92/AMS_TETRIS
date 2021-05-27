@@ -2,7 +2,6 @@
 #define TETRIS_H_
 
 #define F_CPU 16000000
-#define TICK 250
 #define MAX_ROWS 18
 #define MAX_COLUMNS 16
 

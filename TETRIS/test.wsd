@@ -3,31 +3,44 @@ hide circle
 top to bottom direction
 
 frame "cd Tetris" {
-    class blocks
+    class blocks {
+        Block CombinesBlocks(Block, Block)
+        bool CanCombine(Block, Block)
+        Color GetRGBColor(Block);
+    }
     class colors
     class graphics
-    class shapes
-    class tetris
-    class timer
-    class menu
-    class font8x8_basic
+    package shapes {}
+    class tetris {
+        RunTetris()
+    }
+    class timer {
+        bool IsTimerComplete
+        void StartTimer(double)
+    }
+    class menu {
+        RunMenu()
+    }
+    class font8x8_basic {}
     package IL19341 {}
     package XPT2046 {}
     package models {}
 
     menu <|-- tetris
     menu <|-- graphics
+    menu <|-- XPT2046
     tetris <|-- shapes
     shapes <|-- blocks
     tetris <|- graphics
     graphics <|-- colors
-    graphics <|-- IL19341
+    graphics <|-right- IL19341
     graphics <|-- font8x8_basic
     tetris <|-- timer
-    tetris <|-- XPT2046
+    tetris <|-left- XPT2046
 
-    note left of menu #ffffff
-        Entry point
+    note left of models #ffffff
+        Common type definitions
+        and models
     end note
 }
 @enduml
