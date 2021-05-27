@@ -65,6 +65,7 @@ void RunMenu() {
 	switch (menuAction)
 	{
 		case NEW_GAME:
+		sei();
 		RunTetris();
 		break;
 		
