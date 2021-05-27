@@ -3,79 +3,43 @@
 #include <util/delay.h>
 #include "ILI9341.h"
 
-// Data port definitions:
 #define DATA_PORT_HIGH PORTA
 #define DATA_PORT_LOW  PORTC
 
-// Control port definitions:
 #define WR_PORT PORTG
 #define WR_BIT 2
 #define DC_PORT PORTD
-#define DC_BIT  7  //"DC" signal is at the shield called RS
+#define DC_BIT  7
 #define CS_PORT PORTG
 #define CS_BIT  1
 #define RST_PORT PORTG
 #define RST_BIT 0
 
-// LOCAL FUNCTIONS /////////////////////////////////////////////////////////////
+/****************************************************************************************************/
+/****************************************** Private Methods ******************************************/
+/****************************************************************************************************/
 
-// ILI 9341 data sheet, page 238
 void WriteCommand(unsigned int command)
 {
 	DATA_PORT_LOW = command;
-	// Set pins low
 	DC_PORT &= ~(1 << DC_BIT);
 	CS_PORT &= ~(1 << CS_BIT);
 	WR_PORT &= ~(1 << WR_BIT);
-	// min 15 ns
 	_NOP();
 	WR_PORT |= (1 << WR_BIT);
 }
 
-// ILI 9341 data sheet, page 238
 void WriteData(unsigned int data)
 {
-	// set pins on bus
 	DATA_PORT_HIGH = data >> 8;
 	DATA_PORT_LOW = data;
 
 	DC_PORT |= (1 << DC_BIT);
 	CS_PORT &= ~(1 << CS_BIT);
 	WR_PORT &= ~(1 << WR_BIT);
-	// min 15 ns
 	_NOP();
 	WR_PORT |= (1 << WR_BIT);
 	_NOP();
-}
-
-// PUBLIC FUNCTIONS ////////////////////////////////////////////////////////////
-
-// Initializes (resets) the display
-void DisplayInit()
-{
-	// Control pins outputs
-	DDRG |= 0b00000111;
-	DDRD |= 0b10000000;
-	// Data pins outputs
-	DDRA = 0xFF;
-	DDRC = 0xFF;
-	// Control pins high
-	WR_PORT |= 0b00000111;
-	DC_PORT |= 0b10000000;
-	
-	// RST low
-	RST_PORT &= ~(1 << RST_BIT);
-	_delay_ms(500);
-	
-	// RST high
-	RST_PORT |= (1 << RST_BIT);
-	_delay_ms(500);
-	
-	SleepOut();
-	DisplayOn();
-	
-	MemoryAccessControl(0b01001000);
-	InterfacePixelFormat(0b00000101);
 }
 
 void DisplayOff()
@@ -110,13 +74,11 @@ void MemoryWrite()
 	WriteCommand(0x2C);
 }
 
-// Red 0-31, Green 0-63, Blue 0-31
 void WritePixel(Color color)
 {
 	WriteData(((unsigned int)color.red<<11) | ((unsigned int)color.green<<5) | color.blue);
 }
 
-// Set Column Address (0-239), Start > End
 void SetColumnAddress(unsigned int Start, unsigned int End)
 {
 	WriteCommand(0x2A);
@@ -126,7 +88,6 @@ void SetColumnAddress(unsigned int Start, unsigned int End)
 	WriteData(End);                 // Write LSB of end
 }
 
-// Set Page Address (0-319), Start > End
 void SetPageAddress(unsigned int Start, unsigned int End)
 {
 	WriteCommand(0x2B);
@@ -136,10 +97,37 @@ void SetPageAddress(unsigned int Start, unsigned int End)
 	WriteData(End);                 // Write LSB of end
 }
 
-// Fills rectangle with specified color
-// (StartX,StartY) = Upper left corner. X horizontal (0-319) , Y vertical (0-239).
-// Height (1-240) is vertical. Width (1-320) is horizontal.
-// R-G-B = 5-6-5 bits.
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+void IL19341Init()
+{
+	// Control pins outputs
+	DDRG |= 0b00000111;
+	DDRD |= 0b10000000;
+	// Data pins outputs
+	DDRA = 0xFF;
+	DDRC = 0xFF;
+	// Control pins high
+	WR_PORT |= 0b00000111;
+	DC_PORT |= 0b10000000;
+	
+	// RST low
+	RST_PORT &= ~(1 << RST_BIT);
+	_delay_ms(500);
+	
+	// RST high
+	RST_PORT |= (1 << RST_BIT);
+	_delay_ms(500);
+	
+	SleepOut();
+	DisplayOn();
+	
+	MemoryAccessControl(0b01001000);
+	InterfacePixelFormat(0b00000101);
+}
+
 void FillRectangle(unsigned int StartX, unsigned int StartY, unsigned int Width, unsigned int Height, Color color)
 {
 	SetPageAddress(StartY, StartY + Height);           //Start X value and end value
@@ -151,7 +139,7 @@ void FillRectangle(unsigned int StartX, unsigned int StartY, unsigned int Width,
 	}
 }
 
-void DrawText(char bitmap[8], unsigned int StartX, unsigned int StartY, size_t scale, Color textColor, Color backgroundColor) {
+void DrawBitmap(char bitmap[8], unsigned int StartX, unsigned int StartY, size_t scale, Color textColor, Color backgroundColor) {
 	size_t scaledWidth = (8 * scale);
 	size_t scaledHeigth = (8 * scale);
 	SetPageAddress(StartY, StartY + scaledHeigth - 1);

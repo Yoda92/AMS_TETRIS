@@ -1,19 +1,24 @@
-/*
-* tetris.c
-*
-* Created: 11-04-2021 15:37:13
-*  Author: ander
-*/
-
 #include "tetris.h"
 #include "XPT2046/xpt2046tetris.h"
 
-ISR(TIMER5_OVF_vect)
+volatile bool inputEnabled;
+volatile bool inputReceived;
+volatile Direction nextMove;
+
+typedef enum
 {
-	//StartGameStepTimer triggers this
-	TCCR5B = 0b00000000;
-	inputEnabled = false;
-}
+	INIT,
+	READY_FOR_INPUT,
+	UPDATE_GRAPHICS,
+	TRY_PUSH_DOWN,
+	CREATE_NEW_SHAPE,
+	GAME_OVER
+} TetrisState;
+
+/****************************************************************************************************/
+/***************************************** Private Methods ******************************************/
+/****************************************************************************************************/
+
 
 void Move(TetrisGame *game, Direction direction)
 {
@@ -31,9 +36,9 @@ bool CanMove(TetrisGame *game, Direction direction)
 	Vector nextVector = {.x = game->vector.x, .y = game->vector.y};
 	ShiftVector(&nextVector, direction);
 	ShiftShape(&nextShape, nextVector);
-	bool _canMoveDown = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
+	bool _canMove = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
 	DeleteShape(&nextShape);
-	return _canMoveDown;
+	return _canMove;
 }
 
 bool canRotate(TetrisGame *game)
@@ -75,7 +80,7 @@ void SetNewShape(TetrisGame *game, Shape *newShape)
 	game->vector = CreateDefaultVector(game);
 }
 
-void SendToDisplay(TetrisGame *game)
+void UpdateGraphics(TetrisGame *game)
 {
 	Shape shape = CopyShape(&game->shape);
 	ShiftShape(&shape, game->vector);
@@ -85,25 +90,16 @@ void SendToDisplay(TetrisGame *game)
 	DeleteShape(&shape);
 }
 
-void StartGameStepTimer()
-{
-	TCCR5A = 0b00000000;
-	TCCR5B = 0b00000100;
-	TCNT5 = 30000;
-	TIMSK5 = 0b00000001;
-}
-
 void WaitForInput(TetrisGame *game)
 {
 	sei();
-	StartGameStepTimer();
-	inputEnabled = true;
-	while (inputEnabled)
+	StartTimer(0.75);
+	while (!IsTimerComplete)
 	{
 		if (actionReady)
 		{
-			PlayerAction action = readLatestPlayerAction();
 			cli();
+			PlayerAction action = readLatestPlayerAction();
 			switch (action)
 			{
 			case ROTATE:
@@ -111,22 +107,21 @@ void WaitForInput(TetrisGame *game)
 				if (canRotate(game))
 				{
 					Rotate(&(game->shape));
-					SendToDisplay(game);
+					UpdateGraphics(game);
 				}
 				break;
 			}
-			default: 
+			default:
 			{
 				Direction nextDirection = getDirectionFromAction(action);
 				if (CanMove(game, nextDirection))
 				{
 					Move(game, nextDirection);
-					SendToDisplay(game);
+					UpdateGraphics(game);
 				}
 				break;
 			}
 			}
-
 			sei();
 		}
 	}
@@ -164,6 +159,16 @@ void RemoveCompleteRows(TetrisGame *game)
 	game->score += removedRows;
 }
 
+void DeleteGame(TetrisGame *game)
+{
+	DeleteShape(&game->pile);
+	DeleteShape(&game->shape);
+}
+
+/****************************************************************************************************/
+/***************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
 void RunTetris()
 {
 	TetrisState nextState = INIT;
@@ -174,15 +179,15 @@ void RunTetris()
 		{
 		case INIT:
 		{
-			GraphicsInit();
+			InitTetrisGraphics();
 			game = InitTetrisGame();
 			initXPT2046Tetris();
-			nextState = UPDATE_DISPLAY;
+			nextState = UPDATE_GRAPHICS;
 			break;
 		}
-		case UPDATE_DISPLAY:
+		case UPDATE_GRAPHICS:
 		{
-			SendToDisplay(&game);
+			UpdateGraphics(&game);
 			nextState = READY_FOR_INPUT;
 			break;
 		}
@@ -197,7 +202,7 @@ void RunTetris()
 			if (CanMove(&game, DOWN))
 			{
 				Move(&game, DOWN);
-				nextState = UPDATE_DISPLAY;
+				nextState = UPDATE_GRAPHICS;
 			}
 			else
 			{
@@ -212,7 +217,7 @@ void RunTetris()
 			{
 				SetNewShape(&game, &nextShape);
 				RemoveCompleteRows(&game);
-				nextState = UPDATE_DISPLAY;
+				nextState = UPDATE_GRAPHICS;
 			}
 			else
 			{
@@ -228,6 +233,8 @@ void RunTetris()
 		}
 		}
 	}
-	SendToDisplay(&game);
+	UpdateGraphics(&game);
+	DeleteGame(&game);
 	DisplayGameOver();
+	_delay_ms(2000);
 }

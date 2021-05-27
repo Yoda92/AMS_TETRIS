@@ -1,17 +1,15 @@
-/*
- * block.c
- *
- * Created: 15-04-2021 09:41:15
- *  Author: ander
- */ 
 #include "blocks.h"
 
-Block CombinesBlocks(Block first, Block second) {
-	return first == EMPTY ? second : first;
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+Block CombinesBlocks(Block a, Block b) {
+	return a == EMPTY ? b : a;
 }
 
-bool CanCombine(Block first, Block second) {
-	if (first == EMPTY || second == EMPTY) {
+bool CanCombine(Block a, Block b) {
+	if (a == EMPTY || b == EMPTY) {
 		return true;
 	} else {
 		return false;
