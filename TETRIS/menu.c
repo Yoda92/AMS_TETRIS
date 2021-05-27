@@ -26,6 +26,7 @@ void InitMenu() {
 	RenderLogo();
 	CreateButtons();
 	initXPT2046Tetris();
+	SD_init();
 }
 
 /****************************************************************************************************/
@@ -45,6 +46,12 @@ void RunMenu() {
 			{
 				RunTetris();
 				break;	
+			}
+			
+			case HIGH_SCORES:
+			{
+				SD_getHighScores();
+				break;
 			}
 			
 			default:

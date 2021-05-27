@@ -299,12 +299,13 @@ unsigned char SD_writeSingleBlock(unsigned long startBlock, unsigned char* ptr)
 int compare(const void* a, const void* b)
 {
 	if (*((int*) a) == *((int*) b)) return 0;
-	else if (*((int*) a) < *((int*) b)) return -1;
-	else return 1;
+	else if (*((int*) a) < *((int*) b)) return 1;
+	else return -1;
 }
 
 unsigned char SD_getHighScores() 
 {
+	RenderBackground();
 	SD_readSingleBlock(SaveBlock, buffer);
 	
 	for(int i = 0; i<10; i++)
@@ -318,8 +319,6 @@ unsigned char SD_getHighScores()
 	{
 		buffer[i+1] = highScores[i];
 	}
-	
-	RenderBackground();
 	
 	for (int i = 1; i<11; i++)
 	{
