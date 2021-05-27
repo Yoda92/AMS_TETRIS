@@ -1,7 +1,9 @@
+#ifndef COORDINATEMAPPER_H_
+#define COORDINATEMAPPER_H_
+
+#include "xpt2046Types.h"
 #include "../models/direction.h"
 
-
-struct Coordinate;
 typedef enum {
 	MOVE_LEFT,
 	MOVE_RIGHT,
@@ -12,3 +14,5 @@ typedef enum {
 PlayerAction actionFromCoordinate(struct Coordinate coord);
 
 Direction getDirectionFromAction(PlayerAction action);
+
+#endif /* COORDINATEMAPPER_H_ */

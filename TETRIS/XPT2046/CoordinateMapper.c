@@ -1,6 +1,4 @@
-
 #include "CoordinateMapper.h"
-#include "xpt2046Types.h"
 
 #define ONE_THIRD_X 80
 #define MIDDLE_X 120

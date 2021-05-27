@@ -1,7 +1,10 @@
-struct Coordinate {
+#ifndef XPT2046TYPES_H_
+#define XPT2046TYPES_H_
+
+typedef struct Coordinate {
     unsigned int x;
     unsigned int y;
-};
+} Coordinate;
 
 struct Rectangle
 {
@@ -17,4 +20,6 @@ struct ADC_read {
 };
 
 
-int isCoordInRect(struct Coordinate coord, struct Rectangle rect);
+int isCoordInRect(Coordinate coord, struct Rectangle rect);
+
+#endif /* XPT2046TYPES_H_ */

@@ -1,8 +1,13 @@
-struct Coordinate;
+#ifndef MENUTOUCHMAPPER_H_
+#define MENUTOUCHMAPPER_H_
+
+#include "XPT2046/xpt2046Types.h"
 
 typedef enum {
 	NEW_GAME,
 	HIGH_SCORES
 } MenuAction;
 
-MenuAction menuActionFromCoordinate(struct Coordinate coord);
+MenuAction menuActionFromCoordinate(Coordinate coord);
+
+#endif /* MENUTOUCHMAPPER_H_ */

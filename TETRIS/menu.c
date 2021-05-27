@@ -26,7 +26,6 @@ void InitMenu() {
 	RenderLogo();
 	CreateButtons();
 	initXPT2046Tetris();
-	sei();
 }
 
 /****************************************************************************************************/
@@ -35,17 +34,34 @@ void InitMenu() {
 
 void RunMenu() {
 	InitMenu();
-	while (!actionReady) {
-	}
+	while (1) {
+		sei();
+		while (!actionReady) {}
+		cli();
 		MenuAction menuAction =  menuActionFromCoordinate(readLatestCoordinate());
 		switch (menuAction)
 		{
+			case NEW_GAME:
+			{
+				RunTetris();
+				break;	
+			}
+			
+			default:
+			{
+				break;		
+			}
+		}
+	}
+	while (!actionReady) {}
+	MenuAction menuAction =  menuActionFromCoordinate(readLatestCoordinate());
+	switch (menuAction)
+	{
 		case NEW_GAME:
-			RunTetris();
-			break;
+		RunTetris();
+		break;
 		
 		default:
-			break;
-		}
-		
+		break;
+	}
 }

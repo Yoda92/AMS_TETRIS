@@ -189,6 +189,12 @@
     <Compile Include="menu.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MenuTouchMapper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MenuTouchMapper.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="models\block.h">
       <SubType>compile</SubType>
     </Compile>
@@ -265,6 +271,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046tetris.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046Types.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046Types.h">
