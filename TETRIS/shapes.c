@@ -242,7 +242,7 @@ void RemoveRow(Shape* shape, size_t row)  {
 }
 
 bool IsRowComplete(Shape* shape, size_t row) {
-	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns - 1); x++) {
+	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns); x++) {
 		if (shape->matrix[x] == EMPTY) {
 			return false;
 		}
