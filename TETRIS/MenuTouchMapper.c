@@ -2,16 +2,16 @@
 
 struct Rectangle newGameButton = {
     .topLeftX = 24,
-    .topLeftY = 80 + 64,
+    .topLeftY = 80 ,
     .bottomRightX = 192 + 24,
-    .bottomRightY = 80
+    .bottomRightY = 80 + 64
 };
 
 struct Rectangle highScoresButton = {
     .topLeftX = 24,
-    .topLeftY = 168 + 64,
+    .topLeftY = 168,
     .bottomRightX = 192 + 24,
-    .bottomRightY = 168
+    .bottomRightY = 168 + 64
 };
 
 #include "graphics.h"

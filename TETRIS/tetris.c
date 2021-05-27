@@ -98,6 +98,7 @@ void WaitForInput(TetrisGame *game)
 		{
 			struct Coordinate coordinate = readLatestCoordinate();
 			PlayerAction action = actionFromCoordinate(coordinate);
+			
 			switch (action)
 			{
 			case ROTATE:
@@ -179,6 +180,7 @@ void RunTetris()
 		{
 			InitTetrisGraphics();
 			game = InitTetrisGame();
+			initXPT2046Tetris();
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}
