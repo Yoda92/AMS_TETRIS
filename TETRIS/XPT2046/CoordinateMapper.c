@@ -32,7 +32,7 @@ struct Rectangle moveDownArea = {
     .bottomRightY = MAX_Y};
 
 
-// Top  half of the screen
+// Top half of the screen
 struct Rectangle rotateArea = {
     .topLeftX = 0,
     .topLeftY = 0,
