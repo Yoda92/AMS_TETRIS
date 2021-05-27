@@ -170,6 +170,7 @@ void RunTetris()
 {
 	TetrisState nextState = INIT;
 	TetrisGame game;
+	unsigned char highScore;
 	while (nextState != GAME_OVER)
 	{
 		switch (nextState)
@@ -230,6 +231,15 @@ void RunTetris()
 		}
 	}
 	UpdateGraphics(&game);
+	
+	if(game.score > MAX_SCORE) highScore = (unsigned char)MAX_SCORE;
+	else highScore = (unsigned char)game.score;
+	SD_saveHighScore(highScore);
+	
 	DeleteGame(&game);
 	DisplayGameOver();
+	StartTimer(5);
+	while(!IsTimerComplete) {
+		
+	}
 }

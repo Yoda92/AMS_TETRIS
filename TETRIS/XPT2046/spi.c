@@ -136,7 +136,6 @@ void initSpi()
     CHIP_SELECT_DIRECTION_REG |= (1<<CHIP_SELECT_PIN);
 }
 
-
 unsigned char readWriteByte(unsigned char command)
 {
 	setMasterOutValue(0);

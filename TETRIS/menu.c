@@ -36,7 +36,6 @@ void InitMenu() {;
 void RunMenu() {
 	InitMenu();
 	while (!actionReady) {
-		
 	}
 		MenuAction menuAction =  menuActionFromCoordinate(readLatestCoordinate());
 		switch (menuAction)
