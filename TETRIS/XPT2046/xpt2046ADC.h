@@ -1,5 +1,5 @@
 
-#define ADC_MAXVAL 127
+#define ADC_MAXVAL 255
 #define X_DIMENSION 240
 #define Y_DIMENSION 320
 

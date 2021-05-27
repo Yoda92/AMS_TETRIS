@@ -40,6 +40,7 @@ bool canRotate(TetrisGame *game)
 {
 	Shape nextShape = CopyShape(&game->shape);
 	Rotate(&nextShape);
+	ShiftShape(&nextShape, game->vector);
 	bool _canRotate = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
 	DeleteShape(&nextShape);
 	return _canRotate;
@@ -91,9 +92,9 @@ void WaitForInput(TetrisGame *game)
 	StartTimer(0.75);
 	while (!IsTimerComplete)
 	{
+		cli();
 		if (actionReady)
 		{
-			cli();
 			PlayerAction action = readLatestPlayerAction();
 			switch (action)
 			{
@@ -117,8 +118,8 @@ void WaitForInput(TetrisGame *game)
 				break;
 			}
 			}
-			sei();
 		}
+		sei();
 	}
 	cli();
 }

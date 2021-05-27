@@ -1,6 +1,7 @@
 #ifndef ILI9341_H_
 #define ILI9341_H_
 
+#define F_CPU 16000000
 #define SCREEN_HEIGHT 320
 #define SCREEN_WIDTH 240
 
