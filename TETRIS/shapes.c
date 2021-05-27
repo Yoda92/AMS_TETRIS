@@ -1,9 +1,3 @@
-/*
-* shapes.c
-*
-* Created: 08-04-2021 08:30:13
-*  Author: ander
-*/
 #include "shapes.h"
 
 struct {
@@ -62,6 +56,19 @@ const Shape defaultShapes[DEFAULT_COUNT] = {
 	}
 };
 
+/****************************************************************************************************/
+/****************************************** Private Methods ******************************************/
+/****************************************************************************************************/
+
+Block* CreateEmptyMatrix(size_t rows, size_t columns);
+void CopyMatrix(Block* input, Block* output, size_t rows, size_t columns);
+void SetRandomSeed();
+int CreateRandomNumber();
+void FlipRows(Shape* shape);
+void Transpose(Shape* shape);
+void SetSize(Shape* shape, size_t rows, size_t columns);
+void NormalizeShapes(Shape* first, Shape* second);
+
 Block* CreateEmptyMatrix(size_t rows, size_t columns) {
 	Block* matrix = malloc(sizeof(Block) * rows * columns);
 	for(size_t i = 0; i < (rows * columns); i++) {
@@ -70,52 +77,19 @@ Block* CreateEmptyMatrix(size_t rows, size_t columns) {
 	return matrix;
 }
 
-void copyMatrix(Block* input, Block* output, size_t rows, size_t columns) {
+void CopyMatrix(Block* input, Block* output, size_t rows, size_t columns) {
 	for(size_t i = 0; i < (rows * columns); i++) {
 		output[i] = input[i];
 	}
 }
 
-Shape CopyShape(Shape* input) {
-	Shape output = {
-		.columns = input->columns,
-		.rows = input->rows,
-		.matrix = CreateEmptyMatrix(input->rows, input->columns)
-	};
-	copyMatrix(input->matrix, output.matrix, input->rows, input->columns);
-	
-	return output;
-}
-
-Shape CreateEmptyShape(size_t rows, size_t columns) {
-	Shape _emptyShape = {
-		.rows = rows,
-		.columns = columns,
-		.matrix = CreateEmptyMatrix(rows, columns)
-	};
-	
-	return _emptyShape;
-}
-
-void setRandomSeed() {
+void SetRandomSeed() {
 	// TODO: read analog input and set seed value
 }
 
-int createRandomNumber() {
-	setRandomSeed();
+int CreateRandomNumber() {
+	SetRandomSeed();
 	return rand() % DEFAULT_COUNT;
-}
-
-Shape CreateRandomShape() {
-	const Shape* _randomShape = &defaultShapes[createRandomNumber()];
-	Shape output = CreateEmptyShape(_randomShape->rows, _randomShape->columns);
-	copyMatrix(_randomShape->matrix, output.matrix, _randomShape->rows, _randomShape->columns);
-	
-	return output;
-}
-
-void DeleteShape(Shape* shape) {
-	free(shape->matrix);
 }
 
 void FlipRows(Shape* shape) {
@@ -140,6 +114,69 @@ void Transpose(Shape* shape) {
 	DeleteShape(&_shape);
 }
 
+void SetSize(Shape* shape, size_t rows, size_t columns) {
+	if (rows > shape->rows) {
+		AppendRows(shape, rows - shape->rows);
+	}
+	if (columns > shape->columns) {
+		AppendColumns(shape, columns - shape->columns);
+	}
+	Block* _matrix = CreateEmptyMatrix(rows, columns);
+	for(size_t y=0; y < rows; y++) {
+		for(size_t x=0; x < columns; x++) {
+			_matrix[(y * columns) + x] = shape->matrix[(y * columns) + x];
+		}
+	}
+	free(shape->matrix);
+	shape->matrix = _matrix;
+	shape->rows = rows;
+	shape->columns = columns;
+}
+
+void NormalizeShapes(Shape* first, Shape* second) {
+	size_t maxRows = (first->rows > second->rows) ? first->rows : second->rows;
+	size_t maxColumns = (first->columns > second->columns) ? first->columns : second->columns;
+	SetSize(first, maxRows, maxColumns);
+	SetSize(second, maxRows, maxColumns);
+}
+
+/****************************************************************************************************/
+/****************************************** Public Methods ******************************************/
+/****************************************************************************************************/
+
+Shape CopyShape(Shape* input) {
+	Shape output = {
+		.columns = input->columns,
+		.rows = input->rows,
+		.matrix = CreateEmptyMatrix(input->rows, input->columns)
+	};
+	CopyMatrix(input->matrix, output.matrix, input->rows, input->columns);
+	
+	return output;
+}
+
+Shape CreateEmptyShape(size_t rows, size_t columns) {
+	Shape _emptyShape = {
+		.rows = rows,
+		.columns = columns,
+		.matrix = CreateEmptyMatrix(rows, columns)
+	};
+	
+	return _emptyShape;
+}
+
+Shape CreateRandomShape() {
+	const Shape* _randomShape = &defaultShapes[CreateRandomNumber()];
+	Shape output = CreateEmptyShape(_randomShape->rows, _randomShape->columns);
+	CopyMatrix(_randomShape->matrix, output.matrix, _randomShape->rows, _randomShape->columns);
+	
+	return output;
+}
+
+void DeleteShape(Shape* shape) {
+	free(shape->matrix);
+}
+
 void Rotate(Shape* shape) {
 	Transpose(shape);
 	FlipRows(shape);
@@ -155,7 +192,17 @@ void PrependRows(Shape* shape, size_t amount) {
 	shape->rows = shape->rows + amount;
 }
 
-void prependColumns(Shape* shape, size_t amount)  {
+void AppendRows(Shape* shape, size_t amount) {
+	Block* _matrix = CreateEmptyMatrix(shape->rows + amount, shape->columns);
+	for (size_t i = 0; i < (shape->rows * shape->columns); i++) {
+		_matrix[i] = shape->matrix[i];
+	}
+	free(shape->matrix);
+	shape->matrix = _matrix;
+	shape->rows = shape->rows + amount;
+}
+
+void PrependColumns(Shape* shape, size_t amount)  {
 	Block* _matrix = CreateEmptyMatrix(shape->rows, shape->columns + amount);
 	for(size_t y=0; y < shape->rows; y++) {
 		for(size_t x=0; x < shape->columns; x++) {
@@ -165,16 +212,6 @@ void prependColumns(Shape* shape, size_t amount)  {
 	free(shape->matrix);
 	shape->matrix = _matrix;
 	shape->columns = shape->columns + amount;
-}
-
-void AppendRows(Shape* shape, size_t amount) {
-	Block* _matrix = CreateEmptyMatrix(shape->rows + amount, shape->columns);
-	for (size_t i = 0; i < (shape->rows * shape->columns); i++) {
-		_matrix[i] = shape->matrix[i];
-	}
-	free(shape->matrix);
-	shape->matrix = _matrix;
-	shape->rows = shape->rows + amount;
 }
 
 void AppendColumns(Shape* shape, size_t amount)  {
@@ -205,7 +242,7 @@ void RemoveRow(Shape* shape, size_t row)  {
 }
 
 bool IsRowComplete(Shape* shape, size_t row) {
-	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns); x++) {
+	for(size_t x=(shape->columns * row); x < (shape->columns * row + shape->columns - 1); x++) {
 		if (shape->matrix[x] == EMPTY) {
 			return false;
 		}
@@ -215,14 +252,16 @@ bool IsRowComplete(Shape* shape, size_t row) {
 }
 
 void ShiftShape(Shape* shape, Vector vector) {
-	prependColumns(shape, vector.x);
+	PrependColumns(shape, vector.x);
 	PrependRows(shape, vector.y);
 }
 
 void ShiftVector(Vector* vector, Direction direction) {
 		switch (direction) {
 			case UP: {
-				vector->y = vector->y - 1;
+				if (vector->y > 0) {
+					vector->y = vector->y - 1;
+				}
 				break;
 			}
 			case DOWN: {
@@ -230,7 +269,9 @@ void ShiftVector(Vector* vector, Direction direction) {
 				break;
 			}
 			case LEFT: {
-				vector->x = vector->x - 1;
+				if (vector->x > 0) {
+					vector->x = vector->x - 1;
+				}
 				break;
 			}
 			case RIGHT: {
@@ -239,25 +280,6 @@ void ShiftVector(Vector* vector, Direction direction) {
 			}
 			default: {}
 		}
-}
-
-void setSize(Shape* shape, size_t rows, size_t columns) {
-	if (rows > shape->rows) {
-		AppendRows(shape, rows - shape->rows);
-	}
-	if (columns > shape->columns) {
-		AppendColumns(shape, columns - shape->columns);
-	}
-	Block* _matrix = CreateEmptyMatrix(rows, columns);
-	for(size_t y=0; y < rows; y++) {
-		for(size_t x=0; x < columns; x++) {
-			_matrix[(y * columns) + x] = shape->matrix[(y * columns) + x];
-		}
-	}
-	free(shape->matrix);
-	shape->matrix = _matrix;
-	shape->rows = rows;
-	shape->columns = columns;	
 }
 
 bool IsCombinePossible(Shape* first, Shape* second) {
@@ -273,13 +295,6 @@ bool IsCombinePossible(Shape* first, Shape* second) {
 	DeleteShape(&_first);
 	DeleteShape(&_second);
 	return (errors == 0);
-}
-
-void NormalizeShapes(Shape* first, Shape* second) {
-	size_t maxRows = (first->rows > second->rows) ? first->rows : second->rows;
-	size_t maxColumns = (first->columns > second->columns) ? first->columns : second->columns;
-	setSize(first, maxRows, maxColumns);
-	setSize(second, maxRows, maxColumns);
 }
 
 Shape CombineShapes(Shape* first, Shape* second) {

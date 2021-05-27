@@ -1,0 +1,33 @@
+@startuml
+hide circle
+top to bottom direction
+
+frame "cd Tetris" {
+    class blocks
+    class colors
+    class graphics
+    class shapes
+    class tetris
+    class timer
+    class menu
+    class font8x8_basic
+    package IL19341 {}
+    package XPT2046 {}
+    package models {}
+
+    menu <|-- tetris
+    menu <|-- graphics
+    tetris <|-- shapes
+    shapes <|-- blocks
+    tetris <|- graphics
+    graphics <|-- colors
+    graphics <|-- IL19341
+    graphics <|-- font8x8_basic
+    tetris <|-- timer
+    tetris <|-- XPT2046
+
+    note left of menu #ffffff
+        Entry point
+    end note
+}
+@enduml

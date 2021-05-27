@@ -17,9 +17,8 @@
 #define D_IRQ_PIN 4 //INT4
 
 unsigned int readTwoBytes(unsigned char command);
-unsigned int readX();
-unsigned int readY();
-unsigned int readZ();
+unsigned char readX();
+unsigned char readY();
 void initInterrupt();
 
 
@@ -31,14 +30,12 @@ void initReader()
 {
     initInterrupt();
     initSpi();
-    readWriteByte(0xD0);
+    // readWriteByte(0xD0);
 }
 
-void onScreenPressed(unsigned int *X, unsigned int *Y, unsigned int *Z)
+unsigned char getTouchCoordinates()
 {
-    *X = readX();
-    *Y = readY();
-    *Z = readZ();
+    return readX();
 }
 
 /****************************************************************************************************/
@@ -55,25 +52,23 @@ unsigned int readTwoBytes(unsigned char command)
     return combined;
 }
 
-unsigned int readX()
-{
-    return readTwoBytes(READ_X<<3);
+unsigned char readInput(char command) {
+	return readWriteByte(command);
 }
 
-unsigned int readY()
+unsigned char readX()
 {
-    return readTwoBytes(READ_Y<<3);
+    return readInput(0b11011000);
 }
 
-unsigned int readZ()
+unsigned char readY()
 {
-    return readTwoBytes(READ_Z<<3);
+    return readTwoBytes(0b10011000);
 }
 
 void initInterrupt()
 {
     EIMSK = 0b00010000; //Activate intterupt 4.
     EICRA = 0b00000000;
-    EICRB = 0b00000011; //rising edge activation of interrupt 4.
-    sei();
+    EICRB = 0b00000010; //falling edge activation of interrupt 4.
 }

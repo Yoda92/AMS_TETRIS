@@ -1,11 +1,3 @@
-/*
- * colors.h
- *
- * Created: 14-05-2021 10:25:59
- *  Author: ander
- */ 
-
-
 #ifndef COLORS_H_
 #define COLORS_H_
 

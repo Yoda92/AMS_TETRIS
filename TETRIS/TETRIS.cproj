@@ -183,6 +183,12 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="menu.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menu.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="models\block.h">
       <SubType>compile</SubType>
     </Compile>
@@ -225,10 +231,34 @@
     <Compile Include="tetris.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="timer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="timer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\spi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="XPT2046\xpt2046.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046ADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046ADC.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046reader.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046reader.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

@@ -1,15 +1,8 @@
-/*
- * TETRIS.c
- *
- * Created: 08-04-2021 08:29:22
- * Author : ander
- */ 
-
-#include "tetris.h"
+#include "menu.h"
 
 int main(void)
 {
-	RunTetris();
+	RunMenu();
 	return 0;
 }
 

@@ -1,6 +1,7 @@
 #include "spi.h"
 #include "avr/io.h"
 #include "util/delay.h"
+#include <avr/cpufunc.h>
 
 //Hard coded for spi mode 0
 
@@ -86,7 +87,7 @@ void setMasterOutValue(unsigned char state)
 // Returns high or low
 unsigned char getMasterInValue()
 {
-    if (MASTER_IN_PORT & (1 << MASTER_IN_PIN))
+    if (PINE & (1 << MASTER_IN_PIN))
     {
         return HIGH;
     }
@@ -137,23 +138,34 @@ void initSpi()
 }
 
 
-unsigned char readWriteByte(unsigned char writeThis)
+unsigned char readWriteByte(unsigned char command)
 {
-    unsigned char buf = writeThis;
+	char buffer = 0;
+	setMasterOutValue(0);
+	setClock(LOW);
     setChipSelect(LOW);
-    setClock(LOW);
     // For each bit in byte
     for (unsigned char i = 0; i < 8; i++)           
     {
-        setMasterOutValue(getMSB(buf));
-        buf = buf << 1;
-        _delay_us(1);
-        risingClock();
-        buf = setLSB(buf, getMasterInValue());
-        _delay_us(1);
-        fallingClock();
+        setMasterOutValue(getMSB(command << i));
+        _NOP();
+        setClock(HIGH);
+        _NOP();
+        setClock(LOW);
     }
+	_NOP();
+	_NOP();
+	for (unsigned char i = 0; i < 8; i++)
+	{
+		setClock(HIGH);
+		_NOP();
+		setClock(LOW);
+		_NOP();
+		buffer |= getMasterInValue() << (7 - i);
+		_NOP();
+	}
+	
     setChipSelect(HIGH);
-    return buf;
+    return buffer;
 }
 
