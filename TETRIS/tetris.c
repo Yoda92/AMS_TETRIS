@@ -1,9 +1,4 @@
 #include "tetris.h"
-#include "XPT2046/xpt2046tetris.h"
-
-volatile bool inputEnabled;
-volatile bool inputReceived;
-volatile Direction nextMove;
 
 typedef enum
 {
@@ -130,7 +125,6 @@ void WaitForInput(TetrisGame *game)
 
 TetrisGame InitTetrisGame()
 {
-	nextMove = NOOP;
 	Shape shape = CreateRandomShape();
 	Vector vector = {
 		.x = ((double)(MAX_COLUMNS - shape.columns) / 2),
@@ -236,5 +230,4 @@ void RunTetris()
 	UpdateGraphics(&game);
 	DeleteGame(&game);
 	DisplayGameOver();
-	_delay_ms(2000);
 }

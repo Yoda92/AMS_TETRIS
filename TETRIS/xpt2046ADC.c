@@ -2,6 +2,11 @@
 #include <math.h>
 #include "xpt2046Types.h"
 
+
+
+
+
+
 // ADC related
 struct Coordinate coordFromADC(struct ADC_read reading)
 {

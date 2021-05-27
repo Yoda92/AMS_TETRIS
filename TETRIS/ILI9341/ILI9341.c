@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include <avr/cpufunc.h>
-#include <util/delay.h>
 #include "ILI9341.h"
 
 #define DATA_PORT_HIGH PORTA

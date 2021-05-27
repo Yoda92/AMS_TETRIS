@@ -237,16 +237,16 @@
     <Compile Include="timer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="XPT2046\CoordinateMapper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\CoordinateMapper.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="XPT2046\spi.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\spi.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="XPT2046\xpt2046.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="XPT2046\xpt2046.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046ADC.c">
@@ -259,6 +259,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046reader.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046tetris.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046tetris.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="XPT2046\xpt2046Types.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

@@ -24,10 +24,6 @@ void InitMenu() {;
 	RenderLogo();
 	CreateButtons();
 	sei();
-	StartTimer(3);
-	while(!IsTimerComplete) {
-		
-	}
 }
 
 /****************************************************************************************************/
