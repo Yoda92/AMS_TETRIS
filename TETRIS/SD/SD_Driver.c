@@ -337,7 +337,6 @@ unsigned char SD_saveHighScore(unsigned char highScore)
 	int newScore = (int)highScore;
 	int lastPlaceIndex = (int)buffer[0];	
 	int lastPlace = (int)buffer[lastPlaceIndex];
-	int score = 0;
 	
 	if(newScore > lastPlace)
 	{
@@ -345,9 +344,7 @@ unsigned char SD_saveHighScore(unsigned char highScore)
 		
 		for (int i = 1; i<11; i++)
 		{
-			score = (int)buffer[i];
-			
-			if(score < (int)buffer[lastPlaceIndex])
+			if((int)buffer[i] < (int)buffer[lastPlaceIndex])
 			{
 				lastPlaceIndex = i;
 			}
