@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 
 volatile struct ADC_read raw;
-bool actionReady = false;
+volatile bool actionReady = false;
 #define CPU_CLOCK 16000000
 #define TIMER_MAX 65535
 
@@ -13,10 +13,9 @@ void initXPT2046Tetris(){
     initReader();
 }
 
-PlayerAction readLatestPlayerAction(){
+struct Coordinate readLatestCoordinate(){
     actionReady = false;
-    struct Coordinate coord = coordFromADC(raw);
-	return actionFromCoordinate(coord);
+    return coordFromADC(raw);
 }
 
 void startDebounceTimer(){

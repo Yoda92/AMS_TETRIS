@@ -1,5 +1,7 @@
 #include "menu.h"
-
+#include "MenuTouchMapper.h"
+#include "XPT2046/xpt2046tetris.h"
+#include "XPT2046/xpt2046Types.h"
 /****************************************************************************************************/
 /****************************************** Private Methods ******************************************/
 /****************************************************************************************************/
@@ -23,6 +25,8 @@ void InitMenu() {
 	RenderBackground();
 	RenderLogo();
 	CreateButtons();
+	initXPT2046Tetris();
+	sei();
 }
 
 /****************************************************************************************************/
@@ -31,11 +35,17 @@ void InitMenu() {
 
 void RunMenu() {
 	InitMenu();
-	// Todo fix
-	while(1)
-	{
-		if (false) {
-			RunTetris();
-		}
+	while (!actionReady) {
 	}
+		MenuAction menuAction =  menuActionFromCoordinate(readLatestCoordinate());
+		switch (menuAction)
+		{
+		case NEW_GAME:
+			RunTetris();
+			break;
+		
+		default:
+			break;
+		}
+		
 }

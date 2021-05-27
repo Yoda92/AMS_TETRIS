@@ -39,20 +39,6 @@ struct Rectangle rotateArea = {
     .bottomRightX = MAX_X,
     .bottomRightY = MIDDLE_Y};
 
-
-int isCoordInRect(struct Coordinate coord, struct Rectangle rect)
-{
-    // Check if coord exeeds bounds of rect.
-    if (coord.x <= rect.topLeftX ||
-        coord.y <= rect.topLeftY ||
-        coord.x > rect.bottomRightX ||
-        coord.y > rect.bottomRightY)
-    {
-        return 0;
-    }
-    return 1;
-}
-
 PlayerAction actionFromCoordinate(struct Coordinate coord)
 {
     if (isCoordInRect(coord, moveLeftArea))
