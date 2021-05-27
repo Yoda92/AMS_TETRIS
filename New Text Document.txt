@@ -1,0 +1,3 @@
+Skriv et test program der skriver 10 ting til sd kortet, henter dem, printer på skærmen
+
+Eventuelt kig på "menu.c"

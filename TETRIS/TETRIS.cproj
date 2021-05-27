@@ -201,6 +201,18 @@
     <Compile Include="models\vector.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="SD\SD_Driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SD\SD_Driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SD\SPI_Driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="SD\SPI_Driver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="shapes.c">
       <SubType>compile</SubType>
     </Compile>
@@ -224,6 +236,7 @@
     <Folder Include="assets" />
     <Folder Include="models" />
     <Folder Include="ILI9341" />
+    <Folder Include="SD" />
     <Folder Include="XPT2046" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
