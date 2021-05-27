@@ -51,17 +51,17 @@ unsigned char read(unsigned char command)
     readWriteByte(command);
     _NOP();
     _NOP();
-    return readWriteLastByte(0b00000000);
+    return readWriteLastByte((unsigned char)0b00000000);
 }
 
 unsigned char readX()
 {
-    return read(0b11011000);
+    return read((unsigned char)0b11011000);
 }
 
 unsigned char readY()
 {
-    return read(0b10011000);
+    return read((unsigned char)0b10011000);
 }
 
 void initInterrupt()

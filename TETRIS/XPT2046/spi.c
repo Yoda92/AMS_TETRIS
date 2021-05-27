@@ -1,6 +1,8 @@
 #include "spi.h"
 #include "avr/io.h"
 #include <avr/cpufunc.h>
+#include "TETRIS/graphics.h"
+#include <math.h>
 
 //Hard coded for spi mode 0
 
@@ -98,7 +100,7 @@ unsigned char getMasterInValue()
 
 unsigned char getMSB(unsigned char byte)
 {
-    if (byte & (1 << 7))
+    if (byte & 0b10000000)
     {
         return HIGH;
     }
@@ -112,7 +114,7 @@ unsigned char setLSB(unsigned char byte, unsigned char state)
 {
     if (state == LOW)
     {
-        byte &= ~(1);
+        byte &= (unsigned char)~(0b00000001);
     }
     else if (state == HIGH)
     {
@@ -140,22 +142,23 @@ void initSpi()
 unsigned char readWriteByte(unsigned char command)
 {
 	setMasterOutValue(0);
-    unsigned char buffer = 0;
+    int buffer = command;
     setClock(LOW);
     setChipSelect(LOW);
     // For each bit in byte
     for (unsigned char i = 0; i < 8; i++)           
     {
-        setMasterOutValue(getMSB(command << i));
+        setMasterOutValue(getMSB(buffer));
+        buffer = buffer << 1;
 		_NOP();
-        setClock(HIGH);
+        risingClock();
 		_NOP();
-        setClock(LOW); 
+        fallingClock();
 		_NOP();
-		buffer |= getMasterInValue() << (7 - i);
+        buffer = setLSB(buffer, getMasterInValue());
 		_NOP();
     }
-    return buffer;
+    return (unsigned char)buffer;
 }
 
 unsigned char readWriteLastByte(unsigned char command){
@@ -189,7 +192,7 @@ unsigned char readSimplex(unsigned char command)
 		_NOP();
 		setClock(LOW);
 		_NOP();
-		buffer |= getMasterInValue() << (7 - i);
+		buffer |= getMasterInValue() << (unsigned char)(7 - i);
 		_NOP();
 	}
 	
