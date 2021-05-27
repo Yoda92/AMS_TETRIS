@@ -23,7 +23,6 @@ void InitMenu() {;
 	RenderBackground();
 	RenderLogo();
 	CreateButtons();
-	sei();
 }
 
 /****************************************************************************************************/
@@ -31,8 +30,12 @@ void InitMenu() {;
 /****************************************************************************************************/
 
 void RunMenu() {
-	while (1) {
-		InitMenu();
-		RunTetris();
+	InitMenu();
+	// Todo fix
+	while(1)
+	{
+		if (false) {
+			RunTetris();
+		}
 	}
 }

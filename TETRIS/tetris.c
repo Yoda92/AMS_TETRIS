@@ -231,4 +231,8 @@ void RunTetris()
 	UpdateGraphics(&game);
 	DeleteGame(&game);
 	DisplayGameOver();
+	StartTimer(5);
+	while(!IsTimerComplete) {
+		
+	}
 }
