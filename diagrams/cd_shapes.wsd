@@ -1,0 +1,32 @@
+@startuml
+hide circle
+top to bottom direction
+
+frame "cd Shapes" {
+    class blocks {
+        Block CombinesBlocks(Block, Block)
+        bool CanCombine(Block, Block)
+        Color GetRGBColor(Block);
+    }
+    class shapes {
+        const Shape defaultShapes[DEFAULT_COUNT]
+        ShiftVector(Vector*, Direction): void
+        CreateEmptyShape(size_t, size_t): Shape
+        CreateRandomShape(): Shape
+        DeleteShape(Shape*): void
+        Rotate(Shape*): void
+        PrependRows(Shape*, size_t): void
+        AppendRows(Shape* shape, size_t amount): void
+        PrependColumns(Shape* shape, size_t amount): void
+        AppendColumns(Shape* shape, size_t amount): void
+        ShiftShape(Shape*, Vector): void
+        CopyShape(Shape*): Shape
+        IsCombinePossible(Shape*, Shape*): bool
+        CombineShapes(Shape*, Shape*): Shape
+        IsRowComplete(Shape* shape, size_t row): bool
+        RemoveRow(Shape* shape, size_t row): void
+    }
+
+    shapes <|-- blocks
+}
+@enduml

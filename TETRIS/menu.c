@@ -18,7 +18,7 @@ void CreateButtons() {
 	RenderText("High scores", 32, 192, 2, rgbColors.white, rgbColors.teal);
 }
 
-void InitMenu() {;
+void InitMenu() {
 	InitGraphics();
 	RenderBackground();
 	RenderLogo();
