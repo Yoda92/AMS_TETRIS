@@ -24,7 +24,7 @@ PlayerAction readLatestPlayerAction(){
 void startDebounceTimer(){
 	TCCR3A=0b00000000; // Normal mode
 	TCCR3B=0b00000100; // Prescaler 256
-	TCNT3=((TIMER_MAX + 1)-((0.2 * CPU_CLOCK)/256)); // Count
+	TCNT3=((TIMER_MAX + 1)-((0.4 * CPU_CLOCK)/256)); // Count
 	TIMSK3=0b00000001;	
 }
 
