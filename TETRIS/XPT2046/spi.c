@@ -1,8 +1,6 @@
 #include "spi.h"
 #include "avr/io.h"
 #include <avr/cpufunc.h>
-#include "TETRIS/graphics.h"
-#include <math.h>
 
 //Hard coded for spi mode 0
 
