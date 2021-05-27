@@ -1,6 +1,5 @@
 #include "spi.h"
 #include "avr/io.h"
-#include "util/delay.h"
 #include <avr/cpufunc.h>
 
 //Hard coded for spi mode 0
@@ -140,6 +139,35 @@ void initSpi()
 
 unsigned char readWriteByte(unsigned char command)
 {
+	setMasterOutValue(0);
+    unsigned char buffer = 0;
+    setClock(LOW);
+    setChipSelect(LOW);
+    // For each bit in byte
+    for (unsigned char i = 0; i < 8; i++)           
+    {
+        setMasterOutValue(getMSB(command << i));
+		_NOP();
+        setClock(HIGH);
+		_NOP();
+        setClock(LOW); 
+		_NOP();
+		buffer |= getMasterInValue() << (7 - i);
+		_NOP();
+    }
+    return buffer;
+}
+
+unsigned char readWriteLastByte(unsigned char command){
+    unsigned char result = readWriteByte(command);
+    setChipSelect(HIGH);
+    return result;
+}
+
+
+
+unsigned char readSimplex(unsigned char command)
+{
 	char buffer = 0;
 	setMasterOutValue(0);
 	setClock(LOW);
@@ -168,4 +196,3 @@ unsigned char readWriteByte(unsigned char command)
     setChipSelect(HIGH);
     return buffer;
 }
-

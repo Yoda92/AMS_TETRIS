@@ -1,20 +1,11 @@
 
-#define ADC_MAXVAL 4096
+#define ADC_MAXVAL 127
 #define X_DIMENSION 240
 #define Y_DIMENSION 320
 
-struct Coordinate {
-    unsigned int x;
-    unsigned int y;
-};
 
-struct ADC_read {
-    unsigned int x;
-    unsigned int y;
-};
-
-
-
+struct ADC_read;
+struct Coordinate;
 
 // ADC related
 struct Coordinate coordFromADC(struct ADC_read reading);

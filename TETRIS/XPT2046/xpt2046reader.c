@@ -1,7 +1,9 @@
 #include <avr/io.h>
 #include "spi.h"
 #include <avr/interrupt.h>
-
+#include <avr/cpufunc.h>
+#include "xpt2046Types.h"
+#include "xpt2046reader.h"
 
 #define READ_X 0x91
 #define READ_Y 0xD1
@@ -16,7 +18,7 @@
 #define D_IRQ_PORT PORTE
 #define D_IRQ_PIN 4 //INT4
 
-unsigned int readTwoBytes(unsigned char command);
+
 unsigned char readX();
 unsigned char readY();
 void initInterrupt();
@@ -30,40 +32,36 @@ void initReader()
 {
     initInterrupt();
     initSpi();
-    // readWriteByte(0xD0);
 }
 
-unsigned char getTouchCoordinates()
-{
-    return readX();
+struct ADC_read getRawADCCoordates(){
+    struct ADC_read reading;
+    reading.x = readX();
+    reading.y = readY();
+    return reading;
 }
 
 /****************************************************************************************************/
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
-unsigned int readTwoBytes(unsigned char command)
+unsigned char read(unsigned char command)
 {
-    //Read two bytes
+    //Send command and perform dummy write in order to read result.
     readWriteByte(command);
-    unsigned int MSByte = (unsigned int)readWriteByte(0);
-    unsigned int LSByte = (unsigned int)readWriteByte(0);
-    unsigned int combined = (MSByte << 8) & LSByte;
-    return combined;
-}
-
-unsigned char readInput(char command) {
-	return readWriteByte(command);
+    _NOP();
+    _NOP();
+    return readWriteLastByte(0b00000000);
 }
 
 unsigned char readX()
 {
-    return readInput(0b11011000);
+    return read(0b11011000);
 }
 
 unsigned char readY()
 {
-    return readTwoBytes(0b10011000);
+    return read(0b10011000);
 }
 
 void initInterrupt()
@@ -71,4 +69,9 @@ void initInterrupt()
     EIMSK = 0b00010000; //Activate intterupt 4.
     EICRA = 0b00000000;
     EICRB = 0b00000010; //falling edge activation of interrupt 4.
+}
+
+
+unsigned char simplexRead(){
+    return readSimplex(0b11011000);
 }

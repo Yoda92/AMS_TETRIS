@@ -1,7 +1,7 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#define F_CPU 16000000
+#define CPU_CLOCK 16000000
 #define TIMER_MAX 65535
 
 #include <avr/interrupt.h>

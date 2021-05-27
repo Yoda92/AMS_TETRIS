@@ -3,7 +3,6 @@
 
 #define SCREEN_HEIGHT 320
 #define SCREEN_WIDTH 240
-#define F_CPU 16000000
 
 #include <stdio.h>
 #include <avr/io.h>

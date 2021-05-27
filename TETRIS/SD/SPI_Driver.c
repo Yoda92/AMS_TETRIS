@@ -18,16 +18,12 @@ void SPI_init(void)
 }
 
 void SPI_transmit(unsigned char data)
-{
-	unsigned char dummy;
-	
+{	
 	// Start transmission
 	SPDR = data;
 	// Wait for transmission complete
 	while(!(SPSR & (1<<SPIF)))
 	{}
-    // Clear flag 		
-	dummy = SPDR;
 }
 
 unsigned char SPI_receive()
