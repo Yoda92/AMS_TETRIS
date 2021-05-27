@@ -35,6 +35,14 @@ bool CanMove(TetrisGame* game, Direction direction) {
 	return _canMoveDown;
 }
 
+bool canRotate(TetrisGame* game){
+	Shape nextShape = CopyShape(&game->shape);
+	Rotate(&nextShape);
+	bool _canRotate = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
+	DeleteShape(&nextShape);
+	return _canRotate;
+}
+
 Vector CreateDefaultVector(TetrisGame* game) {
 	Vector vector = {
 		.x = ((double) (MAX_COLUMNS - game->shape.columns) / 2),
@@ -89,7 +97,7 @@ void WaitForInput(TetrisGame* game) {
 			PlayerAction action = readLatestPlayerAction();
 			cli();
 			if (action == ROTATE && canRotate(game)){
-				Rotate(game->shape);
+				Rotate(&(game->shape));
 				SendToDisplay(game);
 			}
 			else if (action != ROTATE && CanMove(game, getDirectionFromAction(action))){
