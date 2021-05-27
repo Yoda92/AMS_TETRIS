@@ -1,5 +1,6 @@
 #include "tetris.h"
-
+#include "XPT2046/xpt2046Types.h"
+#include "XPT2046/CoordinateMapper.h"
 typedef enum
 {
 	INIT,
@@ -95,7 +96,8 @@ void WaitForInput(TetrisGame *game)
 		cli();
 		if (actionReady)
 		{
-			PlayerAction action = readLatestPlayerAction();
+			struct Coordinate coordinate = readLatestCoordinate();
+			PlayerAction action = actionFromCoordinate(coordinate);
 			switch (action)
 			{
 			case ROTATE:
@@ -176,7 +178,6 @@ void RunTetris()
 		{
 			InitTetrisGraphics();
 			game = InitTetrisGame();
-			initXPT2046Tetris();
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}

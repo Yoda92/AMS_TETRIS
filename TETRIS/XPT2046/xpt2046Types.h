@@ -17,3 +17,4 @@ struct ADC_read {
 };
 
 
+int isCoordInRect(struct Coordinate coord, struct Rectangle rect);
