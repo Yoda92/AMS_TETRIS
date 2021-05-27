@@ -90,7 +90,7 @@ void UpdateGraphics(TetrisGame *game)
 void WaitForInput(TetrisGame *game)
 {
 	sei();
-	StartTimer(0.75);
+	StartTimer(0.7);
 	while (!IsTimerComplete)
 	{
 		cli();
@@ -237,11 +237,12 @@ void RunTetris()
 	if(game.score > MAX_SCORE) highScore = (unsigned char)MAX_SCORE;
 	else highScore = (unsigned char)game.score;
 	SD_saveHighScore(highScore);
-	
 	DeleteGame(&game);
 	DisplayGameOver();
-	StartTimer(5);
-	while(!IsTimerComplete) {
+	sei();
+	while(!actionReady) {
 		
 	}
+	//Dummy read to clear actionReady.
+	readLatestCoordinate();
 }

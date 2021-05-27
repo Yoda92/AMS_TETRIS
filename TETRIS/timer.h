@@ -10,6 +10,6 @@
 
 void StartTimer(double duration);
 
-extern bool IsTimerComplete;
+extern volatile bool IsTimerComplete;
 
 #endif /* TIMER_H_ */

@@ -34,8 +34,8 @@ void InitMenu() {
 /****************************************************************************************************/
 
 void RunMenu() {
-	InitMenu();
 	while (1) {
+		InitMenu();
 		sei();
 		while (!actionReady) {}
 		cli();

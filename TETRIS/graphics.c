@@ -64,6 +64,7 @@ void InitTetrisGraphics() {
 void DisplayGameOver() {
 	RenderBackground();
 	RenderText("GAME OVER", 12, 148, 3, rgbColors.white, rgbColors.black);
+	RenderText("Tap screen to return.", 40, 190, 1, rgbColors.yellow, rgbColors.black);
 }
 
 void RenderGame(Shape* shape, size_t score) {
