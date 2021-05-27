@@ -1,10 +1,12 @@
 #include "tetris.h"
+#include "XPT2046/xpt2046tetris.h"
 
 volatile bool inputEnabled;
 volatile bool inputReceived;
 volatile Direction nextMove;
 
-typedef enum {
+typedef enum
+{
 	INIT,
 	READY_FOR_INPUT,
 	UPDATE_GRAPHICS,
@@ -17,25 +19,21 @@ typedef enum {
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
-Direction GetTouchDirection();
 
-Direction GetTouchDirection() {
-	unsigned char x = getTouchCoordinates();
-	inputReceived = false;
-	return x > 125 ? RIGHT : LEFT;
-}
-
-void Move(TetrisGame* game, Direction direction) {
+void Move(TetrisGame *game, Direction direction)
+{
 	ShiftVector(&game->vector, direction);
 }
 
-bool IsShapeOutOfBounds(Shape* shape) {
+bool IsShapeOutOfBounds(Shape *shape)
+{
 	return (shape->columns > MAX_COLUMNS || shape->rows > MAX_ROWS);
 }
 
-bool CanMove(TetrisGame* game, Direction direction) {
+bool CanMove(TetrisGame *game, Direction direction)
+{
 	Shape nextShape = CopyShape(&game->shape);
-	Vector nextVector = { .x = game->vector.x, .y = game->vector.y};
+	Vector nextVector = {.x = game->vector.x, .y = game->vector.y};
 	ShiftVector(&nextVector, direction);
 	ShiftShape(&nextShape, nextVector);
 	bool _canMove = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
@@ -43,15 +41,25 @@ bool CanMove(TetrisGame* game, Direction direction) {
 	return _canMove;
 }
 
-Vector CreateDefaultVector(TetrisGame* game) {
+bool canRotate(TetrisGame *game)
+{
+	Shape nextShape = CopyShape(&game->shape);
+	Rotate(&nextShape);
+	bool _canRotate = !IsShapeOutOfBounds(&nextShape) && IsCombinePossible(&nextShape, &game->pile);
+	DeleteShape(&nextShape);
+	return _canRotate;
+}
+
+Vector CreateDefaultVector(TetrisGame *game)
+{
 	Vector vector = {
-		.x = ((double) (MAX_COLUMNS - game->shape.columns) / 2),
-		.y = 0
-	};
+		.x = ((double)(MAX_COLUMNS - game->shape.columns) / 2),
+		.y = 0};
 	return vector;
 }
 
-bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
+bool CanCreateNewShape(TetrisGame *game, Shape *newShape)
+{
 	Shape _newShape = CopyShape(newShape);
 	ShiftShape(&_newShape, CreateDefaultVector(game));
 	bool _canCreateNewShape = IsCombinePossible(&_newShape, &game->pile);
@@ -59,7 +67,8 @@ bool CanCreateNewShape(TetrisGame* game, Shape* newShape) {
 	return _canCreateNewShape;
 }
 
-void SetNewShape(TetrisGame* game, Shape* newShape) {
+void SetNewShape(TetrisGame *game, Shape *newShape)
+{
 	Shape shape = CopyShape(&game->shape);
 	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
@@ -71,7 +80,8 @@ void SetNewShape(TetrisGame* game, Shape* newShape) {
 	game->vector = CreateDefaultVector(game);
 }
 
-void UpdateGraphics(TetrisGame* game) {
+void UpdateGraphics(TetrisGame *game)
+{
 	Shape shape = CopyShape(&game->shape);
 	ShiftShape(&shape, game->vector);
 	Shape combinedShape = CombineShapes(&game->pile, &shape);
@@ -80,51 +90,67 @@ void UpdateGraphics(TetrisGame* game) {
 	DeleteShape(&shape);
 }
 
-void InitTouchInterrupt()
+void WaitForInput(TetrisGame *game)
 {
-	DDRE &= 0b11101111;
-	EIMSK |= 0b00010000; //Activate interrupt 4.
-	EICRA = 0b00000000;
-	EICRB = 0b00000010; //rising edge activation of interrupt 4.
-}
-
-void WaitForInput(TetrisGame* game) {
 	sei();
 	StartTimer(0.75);
-	while(!IsTimerComplete) {
-		cli();
-		if (nextMove != NOOP && CanMove(game, nextMove)) {
-			Move(game, nextMove);
-			UpdateGraphics(game);
-			nextMove = NOOP;
+	while (!IsTimerComplete)
+	{
+		if (actionReady)
+		{
+			cli();
+			PlayerAction action = readLatestPlayerAction();
+			switch (action)
+			{
+			case ROTATE:
+			{
+				if (canRotate(game))
+				{
+					Rotate(&(game->shape));
+					UpdateGraphics(game);
+				}
+				break;
+			}
+			default:
+			{
+				Direction nextDirection = getDirectionFromAction(action);
+				if (CanMove(game, nextDirection))
+				{
+					Move(game, nextDirection);
+					UpdateGraphics(game);
+				}
+				break;
+			}
+			}
+			sei();
 		}
-		sei();
 	}
 	cli();
-	nextMove = NOOP;
 }
 
-TetrisGame InitTetrisGame() {
+TetrisGame InitTetrisGame()
+{
 	nextMove = NOOP;
 	Shape shape = CreateRandomShape();
 	Vector vector = {
-		.x = ((double) (MAX_COLUMNS - shape.columns) / 2),
-		.y = 0
-	};
+		.x = ((double)(MAX_COLUMNS - shape.columns) / 2),
+		.y = 0};
 	TetrisGame tetrisGame = {
 		.pile = CreateEmptyShape(MAX_ROWS, MAX_COLUMNS),
 		.shape = shape,
 		.vector = vector,
-		.score = 0
-	};
-	
+		.score = 0};
+
 	return tetrisGame;
 }
 
-void RemoveCompleteRows(TetrisGame* game) {
+void RemoveCompleteRows(TetrisGame *game)
+{
 	size_t removedRows = 0;
-	for(int i = 0; i < game->pile.rows; i++) {
-		if(IsRowComplete(&game->pile, i)) {
+	for (int i = 0; i < game->pile.rows; i++)
+	{
+		if (IsRowComplete(&game->pile, i))
+		{
 			RemoveRow(&game->pile, i);
 			removedRows++;
 		}
@@ -133,74 +159,78 @@ void RemoveCompleteRows(TetrisGame* game) {
 	game->score += removedRows;
 }
 
-void DeleteGame(TetrisGame* game) {
+void DeleteGame(TetrisGame *game)
+{
 	DeleteShape(&game->pile);
 	DeleteShape(&game->shape);
-}
-
-/****************************************************************************************************/
-/***************************************** Interrupt Methods ******************************************/
-/****************************************************************************************************/
-
-ISR(INT4_vect)
-{
-	EIMSK &= 0b11101111; // Disable interrupt 4
-	nextMove = GetTouchDirection();
-	EIFR |= 0b00010000; // Set interrupt 4 flag
-	EIMSK |= 0b00010000; // Enable interrupt 4
 }
 
 /****************************************************************************************************/
 /***************************************** Public Methods ******************************************/
 /****************************************************************************************************/
 
-void RunTetris() {
+void RunTetris()
+{
 	TetrisState nextState = INIT;
 	TetrisGame game;
-	while(nextState != GAME_OVER) {
-		switch(nextState) {
-			case INIT: {
-				InitTetrisGraphics();
-				game = InitTetrisGame();
-				initReader();
+	while (nextState != GAME_OVER)
+	{
+		switch (nextState)
+		{
+		case INIT:
+		{
+			InitTetrisGraphics();
+			game = InitTetrisGame();
+			initXPT2046Tetris();
+			nextState = UPDATE_GRAPHICS;
+			break;
+		}
+		case UPDATE_GRAPHICS:
+		{
+			UpdateGraphics(&game);
+			nextState = READY_FOR_INPUT;
+			break;
+		}
+		case READY_FOR_INPUT:
+		{
+			WaitForInput(&game);
+			nextState = TRY_PUSH_DOWN;
+			break;
+		}
+		case TRY_PUSH_DOWN:
+		{
+			if (CanMove(&game, DOWN))
+			{
+				Move(&game, DOWN);
 				nextState = UPDATE_GRAPHICS;
-				break;
 			}
-			case UPDATE_GRAPHICS: {
-				UpdateGraphics(&game);
-				nextState = READY_FOR_INPUT;
-				break;
+			else
+			{
+				nextState = CREATE_NEW_SHAPE;
 			}
-			case READY_FOR_INPUT: {
-				WaitForInput(&game);
-				nextState = TRY_PUSH_DOWN;
-				break;
+			break;
+		}
+		case CREATE_NEW_SHAPE:
+		{
+			Shape nextShape = CreateRandomShape();
+			if (CanCreateNewShape(&game, &nextShape))
+			{
+				SetNewShape(&game, &nextShape);
+				RemoveCompleteRows(&game);
+				nextState = UPDATE_GRAPHICS;
 			}
-			case TRY_PUSH_DOWN: {
-				if (CanMove(&game, DOWN)) {
-					Move(&game, DOWN);
-					nextState = UPDATE_GRAPHICS;
-					} else {
-					nextState = CREATE_NEW_SHAPE;
-				}
-				break;				
+			else
+			{
+				DeleteShape(&nextShape);
+				nextState = GAME_OVER;
 			}
-			case CREATE_NEW_SHAPE: {
-				Shape nextShape = CreateRandomShape();
-				if (CanCreateNewShape(&game, &nextShape)) {
-					SetNewShape(&game, &nextShape);
-					RemoveCompleteRows(&game);
-					nextState = UPDATE_GRAPHICS;
-					} else {
-					DeleteShape(&nextShape);
-					nextState = GAME_OVER;
-				}
-				break;				
-			}
-			default: {
-				nextState = INIT;
-				break;
-			}
+			break;
+		}
+		default:
+		{
+			nextState = INIT;
+			break;
+		}
 		}
 	}
 	UpdateGraphics(&game);

@@ -1,6 +1,14 @@
 #include <avr/io.h>
 #include "SD_Driver.h"
 #include "SPI_Driver.h"
+#include "../graphics.h"
+#include "../ILI9341/ILI9341.h"
+#include "../colors.h"
+
+unsigned char buffer[11];
+int highScores[10];
+
+#define SaveBlock 123
 
 //******************************************************************
 //Function	: To initialize the SD/SDHC card in SPI mode
@@ -288,80 +296,67 @@ unsigned char SD_writeSingleBlock(unsigned long startBlock, unsigned char* ptr)
 	return 0;
 }
 
-//// Test of SD driver (main.c)
-//#include <avr/io.h>
-//#define F_CPU 16000000
-//#include <util/delay.h>
-//#include "SD_Driver.h"
-//#include "uart.h"
-//
-//// Arbitrary block number for test
-//#define Block_1 718
-//#define Block_2 1234567
-//
-//unsigned char buffer[512];
-//
-//int main(void)
-//{
-	////Setup SD/SPI drivers
-	//SD_init();
-	//InitUART(9600, 8);
-	//
-	//while(1)
-	//{
-		//SD_readSingleBlock(Block_1, buffer);
-		//SendString("\nBlock ");
-		//SendLong(Block_1);
-		//SendString(" =\n");
-		//for (int i = 0; i<512; i++)
-		//{
-			//SendInteger(buffer[i]);
-			//SendChar(' ');
-		//}
-		//
-		//SD_readSingleBlock(Block_2, buffer);
-		//SendString("\nBlock ");
-		//SendLong(Block_2);
-		//SendString(" =\n");
-		//for (int i = 0; i<512; i++)
-		//{
-			//SendInteger(buffer[i]);
-			//SendChar(' ');
-		//}
-		//char x = ReadChar();
-		//
-		//if (x == 'e')
-		//{
-			//SD_erase (Block_1, Block_2-Block_1+1);
-			//SendString("\nSD Blocks from ");
-			//SendLong(Block_1);
-			//SendString(" to ");
-			//SendLong(Block_2);
-			//SendString("erased\n");
-		//}
-		//
-		//if (x == '1')
-		//{
-			//for (int i = 0; i<512; i++)
-			//{
-				//buffer[i] = i;
-			//}
-			//SD_writeSingleBlock(Block_1, buffer);
-			//SendString("\nBlock ");
-			//SendLong(Block_1);
-			//SendString(" programmed with 0,1,2,3,...\n");
-		//}
-		//
-		//if (x == '2')
-		//{
-			//for (int i = 0; i<512; i++)
-			//{
-				//buffer[i] = i;
-			//}
-			//SD_writeSingleBlock(Block_2, buffer);
-			//SendString("\nBlock ");
-			//SendLong(Block_2);
-			//SendString(" programmed with 0,1,2,3,...\n");
-		//}
-	//}
-//}
+int compare(const void* a, const void* b)
+{
+	if (*((int*) a) == *((int*) b)) return 0;
+	else if (*((int*) a) < *((int*) b)) return -1;
+	else return 1;
+}
+
+unsigned char SD_getHighScores() 
+{
+	SD_readSingleBlock(SaveBlock, buffer);
+	
+	for(int i = 0; i<10; i++)
+	{
+		highScores[i] = (int)buffer[i+1];
+	}
+	
+	qsort(highScores, 10, sizeof(int), compare);
+	
+	for(int i = 0; i<10; i++)
+	{
+		buffer[i+1] = highScores[i];
+	}
+	
+	RenderBackground();
+	
+	for (int i = 1; i<11; i++)
+	{
+		char foo[12];
+		sprintf(foo, "%d", buffer[i]);
+		RenderText(foo, 100, 50+(i*16), 2, rgbColors.white, rgbColors.black);
+	}
+	
+	return 0;
+}
+
+unsigned char SD_saveHighScore(unsigned char highScore)
+{
+	SD_readSingleBlock(SaveBlock, buffer);
+	int newScore = (int)highScore;
+	int lastPlaceIndex = (int)buffer[0];	
+	int lastPlace = (int)buffer[lastPlaceIndex];
+	int score = 0;
+	
+	if(newScore > lastPlace)
+	{
+		buffer[lastPlaceIndex] = highScore;
+		
+		for (int i = 1; i<11; i++)
+		{
+			score = (int)buffer[i];
+			
+			if(score < (int)buffer[lastPlaceIndex])
+			{
+				lastPlaceIndex = i;
+			}
+			
+			if(i == 10) buffer[0] = lastPlaceIndex;
+		}
+		
+		SD_writeSingleBlock(SaveBlock, buffer);
+	}
+	
+	return 0;
+}
