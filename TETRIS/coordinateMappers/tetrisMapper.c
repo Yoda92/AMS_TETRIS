@@ -1,4 +1,4 @@
-#include "CoordinateMapper.h"
+#include "tetrisMapper.h"
 
 #define ONE_THIRD_X 80
 #define MIDDLE_X 120
@@ -37,21 +37,21 @@ Rectangle rotateArea = {
     .bottomRightX = MAX_X,
     .bottomRightY = MIDDLE_Y};
 
-PlayerAction actionFromCoordinate(Coordinate coord)
+PlayerAction ActionFromCoordinate(Coordinate coord)
 {
-    if (isCoordInRect(coord, moveLeftArea))
+    if (IsCoordInRect(coord, moveLeftArea))
     {
         return MOVE_LEFT;
     }
-    if (isCoordInRect(coord, moveRightArea))
+    if (IsCoordInRect(coord, moveRightArea))
     {
         return MOVE_RIGHT;
     }
-    if (isCoordInRect(coord, moveDownArea))
+    if (IsCoordInRect(coord, moveDownArea))
     {
         return DROP_TO_BOTTOM;
     }
-    if (isCoordInRect(coord, rotateArea))
+    if (IsCoordInRect(coord, rotateArea))
     {
         return ROTATE;
     }
@@ -60,7 +60,7 @@ PlayerAction actionFromCoordinate(Coordinate coord)
 
 
 
-Direction getDirectionFromAction(PlayerAction action)
+Direction GetDirectionFromAction(PlayerAction action)
 {
     switch (action)
     {

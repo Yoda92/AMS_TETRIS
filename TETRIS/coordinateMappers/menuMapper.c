@@ -1,4 +1,4 @@
-#include "MenuTouchMapper.h"
+#include "menuMapper.h"
 
 Rectangle newGameButton = {
     .topLeftX = 24,
@@ -14,15 +14,13 @@ Rectangle highScoresButton = {
     .bottomRightY = 168 + 64
 };
 
-#include "graphics.h"
-
-MenuAction menuActionFromCoordinate(Coordinate coord)
+MenuAction MenuActionFromCoordinate(Coordinate coord)
 {
-    if (isCoordInRect(coord, newGameButton))
+    if (IsCoordInRect(coord, newGameButton))
     {
         return NEW_GAME;
     }
-    if (isCoordInRect(coord, highScoresButton))
+    if (IsCoordInRect(coord, highScoresButton))
     {
         return HIGH_SCORES;
     }

@@ -19,6 +19,6 @@ typedef struct ADC_read {
     unsigned char y;
 } ADC_read;
 
-int isCoordInRect(Coordinate coord, Rectangle rect);
+int IsCoordInRect(Coordinate coord, Rectangle rect);
 
 #endif /* XPT2046TYPES_H_ */

@@ -10,7 +10,7 @@
 #include "timer.h"
 #include "models/tetris_game.h"
 #include "models/direction.h"
-#include "XPT2046/xpt2046tetris.h"
+#include "XPT2046/xpt2046.h"
 #include "SD/SD_Driver.h"
 #include <avr/interrupt.h>
 

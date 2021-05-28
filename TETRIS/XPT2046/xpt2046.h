@@ -4,8 +4,8 @@
 #include "xpt2046Types.h"
 #include <stdbool.h>
 
-void initXPT2046();
-Coordinate readLatestCoordinate();
+void InitXPT2046();
+Coordinate ReadLatestCoordinate();
 extern volatile bool actionReady;
 
 #endif /* XPT2046_H_ */

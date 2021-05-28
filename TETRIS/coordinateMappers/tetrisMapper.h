@@ -1,7 +1,7 @@
 #ifndef COORDINATEMAPPER_H_
 #define COORDINATEMAPPER_H_
 
-#include "xpt2046Types.h"
+#include "../XPT2046/xpt2046Types.h"
 #include "../models/direction.h"
 
 typedef enum {
@@ -11,7 +11,7 @@ typedef enum {
 	DROP_TO_BOTTOM
 } PlayerAction;
 
-PlayerAction actionFromCoordinate(Coordinate coord);
-Direction getDirectionFromAction(PlayerAction action);
+PlayerAction ActionFromCoordinate(Coordinate coord);
+Direction GetDirectionFromAction(PlayerAction action);
 
 #endif /* COORDINATEMAPPER_H_ */

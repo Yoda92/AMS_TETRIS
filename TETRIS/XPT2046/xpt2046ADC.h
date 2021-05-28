@@ -8,9 +8,9 @@
 #define Y_DIMENSION 320
 
 // ADC related
-Coordinate coordFromADC(ADC_read reading);
-float fractionFromADC(unsigned int ADC_val);
-unsigned int dimensionFromFraction(float fraction, unsigned int maxDimension);
+Coordinate CoordFromADC(ADC_read reading);
+float FractionFromADC(unsigned int ADC_val);
+unsigned int DimensionFromFraction(float fraction, unsigned int maxDimension);
 
 #endif /* XPT2046ADC_H_ */
 

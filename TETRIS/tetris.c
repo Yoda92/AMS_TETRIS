@@ -1,6 +1,6 @@
 #include "tetris.h"
 #include "XPT2046/xpt2046Types.h"
-#include "XPT2046/CoordinateMapper.h"
+#include "coordinateMappers/tetrisMapper.h"
 
 typedef enum
 {
@@ -103,7 +103,7 @@ void PlayerActionHandler(TetrisGame *game, PlayerAction action)
 		}
 		default:
 		{
-			Direction nextDirection = getDirectionFromAction(action);
+			Direction nextDirection = GetDirectionFromAction(action);
 			if (CanMove(game, nextDirection))
 			{
 				Move(game, nextDirection);
@@ -123,8 +123,8 @@ void WaitForInput(TetrisGame *game)
 		cli();
 		if (actionReady)
 		{
-			Coordinate coordinate = readLatestCoordinate();
-			PlayerAction action = actionFromCoordinate(coordinate);
+			Coordinate coordinate = ReadLatestCoordinate();
+			PlayerAction action = ActionFromCoordinate(coordinate);
 			PlayerActionHandler(game, action);
 		}
 		sei();
@@ -185,7 +185,7 @@ void RunTetris()
 		{
 			InitTetrisGraphics();
 			game = InitTetrisGame();
-			initXPT2046();
+			InitXPT2046();
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}
@@ -249,5 +249,5 @@ void RunTetris()
 		
 	}
 	//Dummy read to clear actionReady.
-	readLatestCoordinate();
+	ReadLatestCoordinate();
 }

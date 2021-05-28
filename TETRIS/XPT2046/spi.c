@@ -27,17 +27,17 @@
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
-void setChipSelect(unsigned char state);
-void setClock(unsigned char state);
-void risingClock();
-void fallingClock();
-void setMasterOutValue(unsigned char state);
-unsigned char getMasterInValue();
-unsigned char getMSB(unsigned char byte);
-unsigned char setLSB(unsigned char byte, unsigned char state);
+void SetChipSelect(unsigned char state);
+void SetClock(unsigned char state);
+void RisingClock();
+void FallingClock();
+void SetMasterOutValue(unsigned char state);
+unsigned char GetMasterInValue();
+unsigned char GetMSB(unsigned char byte);
+unsigned char SetLSB(unsigned char byte, unsigned char state);
 
 // Takes high or low
-void setChipSelect(unsigned char state)
+void SetChipSelect(unsigned char state)
 {
     if (state == LOW)
     {
@@ -49,7 +49,7 @@ void setChipSelect(unsigned char state)
     }
 }
 
-void setClock(unsigned char state)
+void SetClock(unsigned char state)
 {
     if (state == LOW)
     {
@@ -61,17 +61,17 @@ void setClock(unsigned char state)
     }
 }
 
-void risingClock()
+void RisingClock()
 {
-    setClock(HIGH);
+    SetClock(HIGH);
 }
-void fallingClock()
+void FallingClock()
 {
-    setClock(LOW);
+    SetClock(LOW);
 }
 
 // Takes high or low
-void setMasterOutValue(unsigned char state)
+void SetMasterOutValue(unsigned char state)
 {
     if (state == LOW)
     {
@@ -84,7 +84,7 @@ void setMasterOutValue(unsigned char state)
 }
 
 // Returns high or low
-unsigned char getMasterInValue()
+unsigned char GetMasterInValue()
 {
     if (PINE & (1 << MASTER_IN_PIN))
     {
@@ -96,7 +96,7 @@ unsigned char getMasterInValue()
     }
 }
 
-unsigned char getMSB(unsigned char byte)
+unsigned char GetMSB(unsigned char byte)
 {
     if (byte & 0b10000000)
     {
@@ -108,7 +108,7 @@ unsigned char getMSB(unsigned char byte)
     }
 }
 
-unsigned char setLSB(unsigned char byte, unsigned char state)
+unsigned char SetLSB(unsigned char byte, unsigned char state)
 {
     if (state == LOW)
     {
@@ -135,61 +135,61 @@ void initSpi()
     CHIP_SELECT_DIRECTION_REG |= (1<<CHIP_SELECT_PIN);
 }
 
-unsigned char readWriteByte(unsigned char command)
+unsigned char ReadWriteByte(unsigned char command)
 {
-	setMasterOutValue(0);
+	SetMasterOutValue(0);
     int buffer = command;
-    setClock(LOW);
-    setChipSelect(LOW);
+    SetClock(LOW);
+    SetChipSelect(LOW);
     // For each bit in byte
     for (unsigned char i = 0; i < 8; i++)           
     {
-        setMasterOutValue(getMSB(buffer));
+        SetMasterOutValue(GetMSB(buffer));
         buffer = buffer << 1;
 		_NOP();
-        risingClock();
+        RisingClock();
 		_NOP();
-        fallingClock();
+        FallingClock();
 		_NOP();
-        buffer = setLSB(buffer, getMasterInValue());
+        buffer = SetLSB(buffer, GetMasterInValue());
 		_NOP();
     }
     return (unsigned char)buffer;
 }
 
-unsigned char readWriteLastByte(unsigned char command){
-    unsigned char result = readWriteByte(command);
-    setChipSelect(HIGH);
+unsigned char ReadWriteLastByte(unsigned char command){
+    unsigned char result = ReadWriteByte(command);
+    SetChipSelect(HIGH);
     return result;
 }
 
-unsigned char readSimplex(unsigned char command)
+unsigned char ReadSimplex(unsigned char command)
 {
 	char buffer = 0;
-	setMasterOutValue(0);
-	setClock(LOW);
-    setChipSelect(LOW);
+	SetMasterOutValue(0);
+	SetClock(LOW);
+    SetChipSelect(LOW);
     // For each bit in byte
     for (unsigned char i = 0; i < 8; i++)           
     {
-        setMasterOutValue(getMSB(command << i));
+        SetMasterOutValue(GetMSB(command << i));
         _NOP();
-        setClock(HIGH);
+        SetClock(HIGH);
         _NOP();
-        setClock(LOW);
+        SetClock(LOW);
     }
 	_NOP();
 	_NOP();
 	for (unsigned char i = 0; i < 8; i++)
 	{
-		setClock(HIGH);
+		SetClock(HIGH);
 		_NOP();
-		setClock(LOW);
+		SetClock(LOW);
 		_NOP();
-		buffer |= getMasterInValue() << (unsigned char)(7 - i);
+		buffer |= GetMasterInValue() << (unsigned char)(7 - i);
 		_NOP();
 	}
 	
-    setChipSelect(HIGH);
+    SetChipSelect(HIGH);
     return buffer;
 }

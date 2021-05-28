@@ -5,8 +5,8 @@
 
 //Uses the spi driver to read xpt2046
 
-void initReader();
-ADC_read getRawADCCoordates();
-unsigned char simplexRead();
+void InitReader();
+ADC_read GetRawADCCoordates();
+unsigned char SimplexRead();
 
 #endif /* XPT2046READER_H_ */

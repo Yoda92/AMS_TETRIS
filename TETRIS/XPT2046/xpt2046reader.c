@@ -17,24 +17,24 @@
 #define D_IRQ_PORT PORTE
 #define D_IRQ_PIN 4 //INT4
 
-unsigned char readX();
-unsigned char readY();
-void initInterrupt();
+unsigned char ReadX();
+unsigned char ReadY();
+void InitInterrupt();
 
 /****************************************************************************************************/
 /****************************************** Public Methods ******************************************/
 /****************************************************************************************************/
 
-void initReader()
+void InitReader()
 {
-    initInterrupt();
+    InitInterrupt();
     initSpi();
 }
 
-ADC_read getRawADCCoordates(){
+ADC_read GetRawADCCoordates(){
     ADC_read reading;
-    reading.x = readX();
-    reading.y = readY();
+    reading.x = ReadX();
+    reading.y = ReadY();
     return reading;
 }
 
@@ -42,32 +42,32 @@ ADC_read getRawADCCoordates(){
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
-unsigned char read(unsigned char command)
+unsigned char Read(unsigned char command)
 {
     //Send command and perform dummy write in order to read result.
-    readWriteByte(command);
+    ReadWriteByte(command);
     _NOP();
     _NOP();
-    return readWriteLastByte((unsigned char)0b00000000);
+    return ReadWriteLastByte((unsigned char)0b00000000);
 }
 
-unsigned char readX()
+unsigned char ReadX()
 {
-    return read((unsigned char)0b11011000);
+    return Read((unsigned char)0b11011000);
 }
 
-unsigned char readY()
+unsigned char ReadY()
 {
-    return read((unsigned char)0b10011000);
+    return Read((unsigned char)0b10011000);
 }
 
-void initInterrupt()
+void InitInterrupt()
 {
     EIMSK = 0b00010000; //Activate intterupt 4.
     EICRA = 0b00000000;
     EICRB = 0b00000010; //falling edge activation of interrupt 4.
 }
 
-unsigned char simplexRead(){
-    return readSimplex(0b11011000);
+unsigned char SimplexRead(){
+    return ReadSimplex(0b11011000);
 }
