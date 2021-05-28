@@ -58,16 +58,4 @@ void RunMenu() {
 			}
 		}
 	}
-	while (!actionReady) {}
-	MenuAction menuAction =  MenuActionFromCoordinate(ReadLatestCoordinate());
-	switch (menuAction)
-	{
-		case NEW_GAME:
-		sei();
-		RunTetris();
-		break;
-		
-		default:
-		break;
-	}
 }
