@@ -1,0 +1,18 @@
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant "Mega2560(Master)"
+participant "XPT2046(Slave)"
+
+"Mega2560(Master)"<<-"XPT2046(Slave)" : Touch interrupt
+"Mega2560(Master)"->"Mega2560(Master)"++ : ISR
+"Mega2560(Master)"->"Mega2560(Master)" ++ : Read X
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master out: Read X Command
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master in: X reading
+deactivate "Mega2560(Master)"
+"Mega2560(Master)"->"Mega2560(Master)" ++ : Read Y
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master out: Read Y Command
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master in: Y reading
+
+@enduml
