@@ -1,5 +1,15 @@
 #include "graphics.h"
 
+#define TETRIS_HEIGHT 270
+#define SCORE_HEIGHT 50
+#define BLOCK_COUNT_HEIGHT 18
+#define BLOCK_COUNT_WIDTH 16
+#define BLOCK_HEIGHT TETRIS_HEIGHT / BLOCK_COUNT_HEIGHT
+#define BLOCK_WIDTH SCREEN_WIDTH / BLOCK_COUNT_WIDTH
+
+Shape referenceShape;
+size_t referenceScore;
+
 /****************************************************************************************************/
 /****************************************** Private Methods ******************************************/
 /****************************************************************************************************/

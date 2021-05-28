@@ -1,6 +1,7 @@
 #include "tetris.h"
 #include "XPT2046/xpt2046Types.h"
-#include "XPT2046/CoordinateMapper.h"
+#include "coordinateMappers/tetrisMapper.h"
+
 typedef enum
 {
 	INIT,
@@ -87,6 +88,32 @@ void UpdateGraphics(TetrisGame *game)
 	DeleteShape(&shape);
 }
 
+void PlayerActionHandler(TetrisGame *game, PlayerAction action)
+{
+	switch (action)
+	{
+		case ROTATE:
+		{
+			if (canRotate(game))
+			{
+				Rotate(&(game->shape));
+				UpdateGraphics(game);
+			}
+			break;
+		}
+		default:
+		{
+			Direction nextDirection = GetDirectionFromAction(action);
+			if (CanMove(game, nextDirection))
+			{
+				Move(game, nextDirection);
+				UpdateGraphics(game);
+			}
+			break;
+		}
+	}
+}
+
 void WaitForInput(TetrisGame *game)
 {
 	sei();
@@ -96,31 +123,9 @@ void WaitForInput(TetrisGame *game)
 		cli();
 		if (actionReady)
 		{
-			struct Coordinate coordinate = readLatestCoordinate();
-			PlayerAction action = actionFromCoordinate(coordinate);
-			
-			switch (action)
-			{
-			case ROTATE:
-			{
-				if (canRotate(game))
-				{
-					Rotate(&(game->shape));
-					UpdateGraphics(game);
-				}
-				break;
-			}
-			default:
-			{
-				Direction nextDirection = getDirectionFromAction(action);
-				if (CanMove(game, nextDirection))
-				{
-					Move(game, nextDirection);
-					UpdateGraphics(game);
-				}
-				break;
-			}
-			}
+			Coordinate coordinate = ReadLatestCoordinate();
+			PlayerAction action = ActionFromCoordinate(coordinate);
+			PlayerActionHandler(game, action);
 		}
 		sei();
 	}
@@ -180,7 +185,7 @@ void RunTetris()
 		{
 			InitTetrisGraphics();
 			game = InitTetrisGame();
-			initXPT2046Tetris();
+			InitXPT2046();
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}
@@ -244,5 +249,5 @@ void RunTetris()
 		
 	}
 	//Dummy read to clear actionReady.
-	readLatestCoordinate();
+	ReadLatestCoordinate();
 }

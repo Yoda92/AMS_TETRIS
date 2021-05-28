@@ -2,7 +2,8 @@
 hide circle
 top to bottom direction
 
-frame "cd Shapes" {
+frame "cd shapes" {
+    package tetris {}
     class blocks {
         Block CombinesBlocks(Block, Block)
         bool CanCombine(Block, Block)
@@ -27,6 +28,7 @@ frame "cd Shapes" {
         RemoveRow(Shape* shape, size_t row): void
     }
 
+    tetris <|-- shapes
     shapes <|-- blocks
 }
 @enduml

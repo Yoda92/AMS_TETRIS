@@ -6,20 +6,19 @@ typedef struct Coordinate {
     unsigned int y;
 } Coordinate;
 
-struct Rectangle
+typedef struct Rectangle
 {
     unsigned int topLeftX;
     unsigned int topLeftY;
     unsigned int bottomRightX;
     unsigned int bottomRightY;
-};
+} Rectangle;
 
-struct ADC_read {
+typedef struct ADC_read {
     unsigned char x;
     unsigned char y;
-};
+} ADC_read;
 
-
-int isCoordInRect(Coordinate coord, struct Rectangle rect);
+int IsCoordInRect(Coordinate coord, Rectangle rect);
 
 #endif /* XPT2046TYPES_H_ */

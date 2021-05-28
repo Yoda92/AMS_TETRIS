@@ -168,6 +168,12 @@
     <Compile Include="colors.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="coordinateMappers\tetrisMapper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="coordinateMappers\tetrisMapper.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="graphics.c">
       <SubType>compile</SubType>
     </Compile>
@@ -183,16 +189,16 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="coordinateMappers\menuMapper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="coordinateMappers\menuMapper.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="menu.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="menu.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MenuTouchMapper.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="MenuTouchMapper.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="models\block.h">
@@ -243,12 +249,6 @@
     <Compile Include="timer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="XPT2046\CoordinateMapper.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="XPT2046\CoordinateMapper.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="XPT2046\spi.c">
       <SubType>compile</SubType>
     </Compile>
@@ -267,10 +267,10 @@
     <Compile Include="XPT2046\xpt2046reader.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="XPT2046\xpt2046tetris.c">
+    <Compile Include="XPT2046\xpt2046.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="XPT2046\xpt2046tetris.h">
+    <Compile Include="XPT2046\xpt2046.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="XPT2046\xpt2046Types.c">
@@ -284,6 +284,7 @@
     <Folder Include="assets" />
     <Folder Include="models" />
     <Folder Include="ILI9341" />
+    <Folder Include="coordinateMappers" />
     <Folder Include="SD" />
     <Folder Include="XPT2046" />
   </ItemGroup>

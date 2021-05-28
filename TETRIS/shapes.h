@@ -12,7 +12,7 @@
 #include "models/vector.h"
 #include "models/direction.h"
 
-const Shape defaultShapes[DEFAULT_COUNT];
+extern const Shape defaultShapes[DEFAULT_COUNT];
 
 void ShiftVector(Vector*, Direction);
 Shape CreateEmptyShape(size_t, size_t);
