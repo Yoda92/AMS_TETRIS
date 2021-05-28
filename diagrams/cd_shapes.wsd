@@ -28,7 +28,7 @@ frame "cd shapes" {
         RemoveRow(Shape* shape, size_t row): void
     }
 
-    tetris <|-- shapes
-    shapes <|-- blocks
+    tetris --> shapes
+    shapes --> blocks
 }
 @enduml

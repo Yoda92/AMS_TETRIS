@@ -1,5 +1,6 @@
 @startuml
 hide circle
+skinparam linetype polyline
 top to bottom direction
 
 frame "cd tetris" {
@@ -29,19 +30,19 @@ frame "cd tetris" {
     package SD {}
     package models {}
 
-    menu <|-- tetris
-    menu <|-- graphics
-    menu <|-- XPT2046
-    menu <|-- SD
-    tetris <|-- shapes
-    tetris <|- graphics
-    tetris <|- SD
-    graphics <|-right- IL19341
-    graphics <|-- font8x8_basic
-    tetris <|-- timer
-    tetris <|-left- XPT2046
+    menu --> tetris
+    menu -> graphics
+    menu --> XPT2046
+    menu --> SD
+    tetris -down-> shapes
+    tetris -down-> graphics
+    tetris --> SD
+    graphics --> IL19341
+    graphics --> font8x8_basic
+    tetris --> timer
+    tetris -> XPT2046
 
-    note left of models #ffffff
+    note right of models #ffffff
         Common type definitions
         and models
     end note
