@@ -1,0 +1,30 @@
+@startuml
+hide footbox
+skinparam shadowing false
+
+mainframe Sequence: Reading XPT2046 with Z-axis check.
+participant "Mega2560(Master)"
+participant "XPT2046(Slave)"
+
+"Mega2560(Master)"<<-"XPT2046(Slave)" : Touch interrupt
+"Mega2560(Master)"->"Mega2560(Master)"++ : ISR
+"Mega2560(Master)"->"Mega2560(Master)" ++ : Read Z
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master out: Read Z Command
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master in: Z reading
+deactivate "Mega2560(Master)"
+alt Z reading is below threshold
+"Mega2560(Master)"->"Mega2560(Master)" : Break isr without reading XY from display.
+
+
+else Z reading is above threshold
+"Mega2560(Master)"->"Mega2560(Master)" ++ : Read X
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master out: Read X Command
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master in: X reading
+deactivate "Mega2560(Master)"
+"Mega2560(Master)"->"Mega2560(Master)" ++ : Read Y
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master out: Read Y Command
+"Mega2560(Master)"<<->>"XPT2046(Slave)" : Master in: Y reading
+deactivate "Mega2560(Master)"
+end
+
+@enduml
