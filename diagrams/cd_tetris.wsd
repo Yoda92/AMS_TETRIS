@@ -6,12 +6,12 @@ top to bottom direction
 frame "cd tetris" {
     package colors {}
     class graphics {
-        + DisplayGameOver(): void
-        + RenderBackground(): void
-        + InitGraphics(): void
-        + InitTetrisGraphics(): void
-        + RenderGame(Shape*, size_t): void
-        + RenderText(char*, size_t, size_t, size_t, Color, Color): void
+        DisplayGameOver(): void
+        RenderBackground(): void
+        InitGraphics(): void
+        InitTetrisGraphics(): void
+        RenderGame(Shape*, size_t): void
+        RenderText(char*, size_t, size_t, size_t, Color, Color): void
     }
     package shapes {}
     class tetris {

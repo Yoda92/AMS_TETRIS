@@ -7,7 +7,7 @@
 #include "../XPT2046/xpt2046.h"
 #include "avr/interrupt.h"
 
-unsigned char buffer[11] = {0};
+unsigned char buffer[11] = {1,0,0,0,0,0,0,0,0,0,0};
 int highScores[10];
 
 #define SaveBlock 123
