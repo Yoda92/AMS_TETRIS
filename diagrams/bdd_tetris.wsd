@@ -1,0 +1,25 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+top to bottom direction
+
+frame "bdd tetris" {
+    [tetris] <<block>>
+    [Atmega2560] <<block>>
+
+    package ITDB02 {
+        [SD] <<block>>
+        [XPT2046] <<block>>
+    }
+
+    package LCD {
+        [ILI9341] <<block>>
+        [TouchDisplay] <<block>>
+    }
+
+    tetris *--- Atmega2560
+    tetris *--- ITDB02
+    tetris *--- LCD
+    ILI9341 *-- TouchDisplay
+}
+@enduml
