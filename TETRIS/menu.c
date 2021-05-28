@@ -48,7 +48,7 @@ void RunMenu() {
 			
 			case HIGH_SCORES:
 			{
-				SD_getHighScores();
+				HighScores();
 				break;
 			}
 			

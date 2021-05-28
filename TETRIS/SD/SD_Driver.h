@@ -37,5 +37,6 @@ unsigned char SD_erase (unsigned long startBlock, unsigned long totalBlocks);
 
 unsigned char SD_getHighScores();
 unsigned char SD_saveHighScore(unsigned char highScore);
+void HighScores();
 
 #endif /* SD_DRIVER_H_ */
