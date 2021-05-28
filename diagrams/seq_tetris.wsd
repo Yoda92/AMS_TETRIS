@@ -1,19 +1,26 @@
 @startuml
+
+    state C1 <<choice>>
+    state C2 <<choice>>
     
-    [*] --> INIT
-    INIT -> UPDATE_GRAPHICS
+    [*] -> INIT
+    INIT --> UPDATE_GRAPHICS
     UPDATE_GRAPHICS --> READY_FOR_INPUT
     READY_FOR_INPUT --> TRY_PUSH_DOWN
 
-    TRY_PUSH_DOWN --> UPDATE_GRAPHICS
-    TRY_PUSH_DOWN --> CREATE_NEW_SHAPE
+    TRY_PUSH_DOWN --> C1 : Can move down?
+    C1 --> UPDATE_GRAPHICS : [True] / Move down
+    C1 --> CREATE_NEW_SHAPE : [False]
 
-    CREATE_NEW_SHAPE --> UPDATE_GRAPHICS
-    CREATE_NEW_SHAPE --> GAME_OVER
+    CREATE_NEW_SHAPE -> C2 : Can create new shape?
+    C2 --> UPDATE_GRAPHICS : [True] / Create new shape
+    C2 -> GAME_OVER : [False]
 
-    state CREATE_NEW_SHAPE {
-        [*] --> STATE1
-        STATE1 --> STATE2
+    state READY_FOR_INPUT {
+        [*] -> WAIT_FOR_ACTION : Start timer
+        WAIT_FOR_ACTION --> [*] : Timer expired
+        WAIT_FOR_ACTION --> ACTION_HANDLER : Player action
+        ACTION_HANDLER --> WAIT_FOR_ACTION
     }
 
 @enduml

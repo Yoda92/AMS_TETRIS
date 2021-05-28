@@ -9,21 +9,21 @@
 #define MAX_Y 320
 
 // Bottom left third of the screen
-struct Rectangle moveLeftArea = {
+Rectangle moveLeftArea = {
     .topLeftX = 0,
     .topLeftY = MIDDLE_Y,
     .bottomRightX = ONE_THIRD_X,
     .bottomRightY = MAX_Y};
 
 // Bottom right third of the screen
-struct Rectangle moveRightArea = {
+Rectangle moveRightArea = {
     .topLeftX = TWO_THIRDS_X,
     .topLeftY = MIDDLE_Y,
     .bottomRightX = MAX_X,
     .bottomRightY = MAX_Y};
 
 // Bottom middle third of the screen
-struct Rectangle moveDownArea = {
+Rectangle moveDownArea = {
     .topLeftX = ONE_THIRD_X,
     .topLeftY = MIDDLE_Y,
     .bottomRightX = TWO_THIRDS_X,
@@ -31,13 +31,13 @@ struct Rectangle moveDownArea = {
 
 
 // Top half of the screen
-struct Rectangle rotateArea = {
+Rectangle rotateArea = {
     .topLeftX = 0,
     .topLeftY = 0,
     .bottomRightX = MAX_X,
     .bottomRightY = MIDDLE_Y};
 
-PlayerAction actionFromCoordinate(struct Coordinate coord)
+PlayerAction actionFromCoordinate(Coordinate coord)
 {
     if (isCoordInRect(coord, moveLeftArea))
     {

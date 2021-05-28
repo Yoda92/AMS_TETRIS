@@ -11,8 +11,7 @@ typedef enum {
 	DROP_TO_BOTTOM
 } PlayerAction;
 
-PlayerAction actionFromCoordinate(struct Coordinate coord);
-
+PlayerAction actionFromCoordinate(Coordinate coord);
 Direction getDirectionFromAction(PlayerAction action);
 
 #endif /* COORDINATEMAPPER_H_ */

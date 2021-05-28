@@ -23,7 +23,6 @@
 #define LOW 0
 #define HIGH 1
 
-
 /****************************************************************************************************/
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
@@ -83,6 +82,7 @@ void setMasterOutValue(unsigned char state)
         MASTER_OUT_PORT |= (1 << MASTER_OUT_PIN);
     }
 }
+
 // Returns high or low
 unsigned char getMasterInValue()
 {
@@ -120,7 +120,6 @@ unsigned char setLSB(unsigned char byte, unsigned char state)
     }
     return byte;
 }
-
 
 /****************************************************************************************************/
 /****************************************** Public Methods ******************************************/
@@ -163,8 +162,6 @@ unsigned char readWriteLastByte(unsigned char command){
     setChipSelect(HIGH);
     return result;
 }
-
-
 
 unsigned char readSimplex(unsigned char command)
 {

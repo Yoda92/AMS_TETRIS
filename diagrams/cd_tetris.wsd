@@ -2,7 +2,7 @@
 hide circle
 top to bottom direction
 
-frame "cd Tetris" {
+frame "cd tetris" {
     package colors {}
     class graphics {
         + DisplayGameOver(): void
@@ -26,14 +26,16 @@ frame "cd Tetris" {
     package font8x8_basic {}
     package IL19341 {}
     package XPT2046 {}
+    package SD {}
     package models {}
 
     menu <|-- tetris
     menu <|-- graphics
     menu <|-- XPT2046
+    menu <|-- SD
     tetris <|-- shapes
     tetris <|- graphics
-    graphics <|-- colors
+    tetris <|- SD
     graphics <|-right- IL19341
     graphics <|-- font8x8_basic
     tetris <|-- timer

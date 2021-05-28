@@ -1,11 +1,10 @@
 #include "xpt2046ADC.h"
 #include <math.h>
-#include "xpt2046Types.h"
 
 // ADC related
-struct Coordinate coordFromADC(struct ADC_read reading)
+Coordinate coordFromADC(ADC_read reading)
 {
-    struct Coordinate coord;
+    Coordinate coord;
     coord.x = dimensionFromFraction(fractionFromADC(reading.x),X_DIMENSION);
     coord.y = Y_DIMENSION - dimensionFromFraction(fractionFromADC(reading.y),Y_DIMENSION);
     return coord;

@@ -1,8 +1,7 @@
 #include <avr/io.h>
-#include "spi.h"
 #include <avr/interrupt.h>
 #include <avr/cpufunc.h>
-#include "xpt2046Types.h"
+#include "spi.h"
 #include "xpt2046reader.h"
 
 #define READ_X 0x91
@@ -18,11 +17,9 @@
 #define D_IRQ_PORT PORTE
 #define D_IRQ_PIN 4 //INT4
 
-
 unsigned char readX();
 unsigned char readY();
 void initInterrupt();
-
 
 /****************************************************************************************************/
 /****************************************** Public Methods ******************************************/
@@ -34,8 +31,8 @@ void initReader()
     initSpi();
 }
 
-struct ADC_read getRawADCCoordates(){
-    struct ADC_read reading;
+ADC_read getRawADCCoordates(){
+    ADC_read reading;
     reading.x = readX();
     reading.y = readY();
     return reading;
@@ -70,7 +67,6 @@ void initInterrupt()
     EICRA = 0b00000000;
     EICRB = 0b00000010; //falling edge activation of interrupt 4.
 }
-
 
 unsigned char simplexRead(){
     return readSimplex(0b11011000);

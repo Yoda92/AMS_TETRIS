@@ -1,19 +1,18 @@
 #include "xpt2046reader.h"
 #include "xpt2046ADC.h"
 #include "xpt2046tetris.h"
-#include "xpt2046Types.h"
 #include <avr/interrupt.h>
 
-volatile struct ADC_read raw;
+volatile ADC_read raw;
 volatile bool actionReady = false;
 #define CPU_CLOCK 16000000
 #define TIMER_MAX 65535
 
-void initXPT2046Tetris(){
+void initXPT2046(){
     initReader();
 }
 
-struct Coordinate readLatestCoordinate(){
+Coordinate readLatestCoordinate(){
     actionReady = false;
     return coordFromADC(raw);
 }
@@ -30,19 +29,17 @@ void stopDebouceTimer(){
 	TIFR3 |= 0b00000001; // Set overflow flag
 }
 
-
 void reEnableTouch(){
 	EIFR |= 0b00010000; // Set interrupt 4 flag
 	EIMSK |= 0b00010000; // Enable interrupt 4
 }
-
 
 ISR(INT4_vect)
 {
 	EIMSK &= 0b11101111; // Disable interrupt 4
 	raw = getRawADCCoordates();
 	startDebounceTimer();
-    actionReady = true;
+	actionReady = true;
 }
 
 ISR(TIMER3_OVF_vect){

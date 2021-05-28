@@ -1,6 +1,6 @@
 #include "xpt2046Types.h"
 
-int isCoordInRect(Coordinate coord, struct Rectangle rect)
+int isCoordInRect(Coordinate coord, Rectangle rect)
 {
     if (coord.x < rect.topLeftX ||
 		coord.y < rect.topLeftY ||

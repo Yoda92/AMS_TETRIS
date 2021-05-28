@@ -1,13 +1,13 @@
 #include "MenuTouchMapper.h"
 
-struct Rectangle newGameButton = {
+Rectangle newGameButton = {
     .topLeftX = 24,
     .topLeftY = 80 ,
     .bottomRightX = 192 + 24,
     .bottomRightY = 80 + 64
 };
 
-struct Rectangle highScoresButton = {
+Rectangle highScoresButton = {
     .topLeftX = 24,
     .topLeftY = 168,
     .bottomRightX = 192 + 24,

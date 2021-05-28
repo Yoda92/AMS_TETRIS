@@ -25,7 +25,7 @@ void InitMenu() {
 	RenderBackground();
 	RenderLogo();
 	CreateButtons();
-	initXPT2046Tetris();
+	initXPT2046();
 	SD_init();
 }
 
