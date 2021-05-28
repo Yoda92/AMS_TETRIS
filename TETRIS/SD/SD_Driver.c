@@ -95,8 +95,6 @@ unsigned char SD_init()
 	SD_sendCommand(CRC_ON_OFF, OFF); //disable CRC; default - CRC disabled in SPI mode
 	SD_sendCommand(SET_BLOCK_LEN, 512); //set block size to 512; default size is 512
 	
-	SD_writeSingleBlock(SaveBlock, buffer);
-	
 	return 0; //successful return
 }
 
@@ -337,9 +335,12 @@ unsigned char SD_getHighScores()
 	for (int i = 1; i<11; i++)
 	{
 		char foo[12];
-		sprintf(foo, "%d", buffer[i]);
-		RenderText(foo, 100, 50+(i*16), 2, rgbColors.white, rgbColors.black);
+		sprintf(foo,"%d: %d", i, buffer[i]);
+		if(i < 10) RenderText(foo, 90, 40+(i*18), 2, rgbColors.white, rgbColors.black);
+		else if(i == 10) RenderText(foo, 74, 40+(i*18), 2, rgbColors.white, rgbColors.black);
 	}
+	
+	RenderText("Tap screen to return.", 40, 270, 1, rgbColors.yellow, rgbColors.black);
 	
 	return 0;
 }
