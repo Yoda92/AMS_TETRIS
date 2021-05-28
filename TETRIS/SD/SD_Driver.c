@@ -4,8 +4,10 @@
 #include "../graphics.h"
 #include "../ILI9341/ILI9341.h"
 #include "../colors.h"
+#include "../XPT2046/xpt2046.h"
+#include "avr/interrupt.h"
 
-unsigned char buffer[11];
+unsigned char buffer[11] = {0};
 int highScores[10];
 
 #define SaveBlock 123
@@ -92,6 +94,8 @@ unsigned char SD_init()
 
 	SD_sendCommand(CRC_ON_OFF, OFF); //disable CRC; default - CRC disabled in SPI mode
 	SD_sendCommand(SET_BLOCK_LEN, 512); //set block size to 512; default size is 512
+	
+	SD_writeSingleBlock(SaveBlock, buffer);
 	
 	return 0; //successful return
 }
@@ -301,6 +305,16 @@ int compare(const void* a, const void* b)
 	if (*((int*) a) == *((int*) b)) return 0;
 	else if (*((int*) a) < *((int*) b)) return 1;
 	else return -1;
+}
+
+void HighScores()
+{
+	SD_getHighScores();
+	sei();
+	while(!actionReady) {
+		
+	}
+	ReadLatestCoordinate();
 }
 
 unsigned char SD_getHighScores() 
