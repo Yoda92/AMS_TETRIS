@@ -95,6 +95,8 @@ unsigned char SD_init()
 	SD_sendCommand(CRC_ON_OFF, OFF); //disable CRC; default - CRC disabled in SPI mode
 	SD_sendCommand(SET_BLOCK_LEN, 512); //set block size to 512; default size is 512
 	
+	SD_writeSingleBlock(SaveBlock, buffer);
+	
 	return 0; //successful return
 }
 
