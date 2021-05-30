@@ -166,6 +166,7 @@ void DeleteGame(TetrisGame *game)
 {
 	DeleteShape(&game->pile);
 	DeleteShape(&game->shape);
+	DestroyTetrisGraphics();
 }
 
 /****************************************************************************************************/
@@ -176,7 +177,6 @@ void RunTetris()
 {
 	TetrisState nextState = INIT;
 	TetrisGame game;
-	unsigned char highScore;
 	while (nextState != GAME_OVER)
 	{
 		switch (nextState)
@@ -185,7 +185,6 @@ void RunTetris()
 		{
 			InitTetrisGraphics();
 			game = InitTetrisGame();
-			InitXPT2046();
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}
@@ -238,10 +237,7 @@ void RunTetris()
 		}
 	}
 	UpdateGraphics(&game);
-	
-	if(game.score > MAX_SCORE) highScore = (unsigned char)MAX_SCORE;
-	else highScore = (unsigned char)game.score;
-	SD_saveHighScore(highScore);
+	SD_saveHighScore(game.score > MAX_SCORE ? (unsigned char) MAX_SCORE : (unsigned char) game.score);
 	DeleteGame(&game);
 	DisplayGameOver();
 	sei();
