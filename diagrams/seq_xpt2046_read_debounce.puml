@@ -9,8 +9,8 @@ participant "Mega2560(Master)"
 participant "XPT2046(Slave)"
 
 "Mega2560(Master)"<<-"XPT2046(Slave)" : Touch interrupt
-"Mega2560(Master)"->"Mega2560(Master)"++ : Touch interrupt 
-"Mega2560(Master)"-[#YellowGreen]>"Mega2560(Master)"++ : Disable touch ISR
+"Mega2560(Master)"->"Mega2560(Master)"++ : Touch ISR 
+"Mega2560(Master)"-[#YellowGreen]>"Mega2560(Master)"++ : Disable touch interrupt
 deactivate "Mega2560(Master)"
 "Mega2560 timer 3"<<-"Mega2560(Master)" : Start
 
