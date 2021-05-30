@@ -152,9 +152,9 @@ void RemoveCompleteRows(TetrisGame *game)
 	size_t removedRows = 0;
 	for (int i = 0; i < game->pile.rows; i++)
 	{
-		if (IsRowComplete(&game->pile, i))
+		if (IsRowComplete(&game->pile, i - removedRows))
 		{
-			RemoveRow(&game->pile, i);
+			RemoveRow(&game->pile, i - removedRows);
 			removedRows++;
 		}
 	}
