@@ -2,7 +2,7 @@
 #include "avr/io.h"
 #include <avr/cpufunc.h>
 
-//Hard coded for spi mode 0
+//Hard coded for spi mode 1
 
 #define MASTER_OUT_DIRECTION_REG DDRG
 #define MASTER_OUT_PORT PORTG
