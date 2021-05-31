@@ -124,7 +124,7 @@ void WaitForInput(TetrisGame *game)
 		if (actionReady)
 		{
 			Coordinate coordinate = ReadLatestCoordinate();
-			PlayerAction action = ActionFromCoordinate(coordinate);
+			PlayerAction action = TetrisActionFromCoordinate(coordinate);
 			PlayerActionHandler(game, action);
 		}
 		sei();

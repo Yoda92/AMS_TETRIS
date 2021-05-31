@@ -11,7 +11,7 @@ typedef enum {
 	DROP_TO_BOTTOM
 } PlayerAction;
 
-PlayerAction ActionFromCoordinate(Coordinate coord);
+PlayerAction TetrisActionFromCoordinate(Coordinate coord);
 Direction GetDirectionFromAction(PlayerAction action);
 
 #endif /* COORDINATEMAPPER_H_ */
