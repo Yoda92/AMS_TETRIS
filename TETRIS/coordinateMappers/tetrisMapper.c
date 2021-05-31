@@ -37,7 +37,7 @@ Rectangle rotateArea = {
     .bottomRightX = MAX_X,
     .bottomRightY = MIDDLE_Y};
 
-PlayerAction ActionFromCoordinate(Coordinate coord)
+PlayerAction TetrisActionFromCoordinate(Coordinate coord)
 {
     if (IsCoordInRect(coord, moveLeftArea))
     {

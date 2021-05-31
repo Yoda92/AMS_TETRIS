@@ -1,0 +1,37 @@
+@startuml
+skinparam Shadowing false
+hide circle
+
+class menu{}
+class tetris{}
+
+package XPT2046{
+    class xpt2046{
+        ReadLatestCoordinate()
+    }
+    class xpt2046{}
+    class xpt2046ADC{}
+    class xpt2046Reader{}
+    class xpt2046Types{}
+}
+class spi
+
+package coordinateMappers{
+    class menuMapper{
+        MenuActionFromCoordinate()
+    }
+    class tetrisMapper{}
+}
+
+menuMapper<--menu
+tetrisMapper<--tetris
+menu-->xpt2046
+tetris-->xpt2046
+
+xpt2046-->xpt2046ADC
+xpt2046-->xpt2046Reader
+xpt2046-->xpt2046Types
+xpt2046-->spi
+
+
+@enduml
