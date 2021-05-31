@@ -151,7 +151,7 @@ TetrisGame InitTetrisGame(int seed)
 void RemoveCompleteRows(TetrisGame *game)
 {
 	size_t removedRows = 0;
-	for (int i = 0; i < game->pile.rows; i++)
+	for (int i = 0; i < MAX_ROWS; i++)
 	{
 		if (IsRowComplete(&game->pile, i - removedRows))
 		{
