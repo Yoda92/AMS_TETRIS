@@ -16,6 +16,19 @@ typedef enum
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
+void Move(TetrisGame *game, Direction direction);
+bool IsShapeOutOfBounds(Shape *shape);
+bool CanMove(TetrisGame *game, Direction direction);
+bool CanRotate(TetrisGame *game);
+Vector CreateDefaultVector(TetrisGame *game);
+bool CanCreateNewShape(TetrisGame *game, Shape *newShape);
+void SetNewShape(TetrisGame *game, Shape *newShape);
+void UpdateGraphics(TetrisGame *game);
+void PlayerActionHandler(TetrisGame *game, PlayerAction action);
+void WaitForInput(TetrisGame *game);
+TetrisGame InitTetrisGame(int seed);
+void RemoveCompleteRows(TetrisGame *game);
+void DeleteGame(TetrisGame *game);
 
 void Move(TetrisGame *game, Direction direction)
 {
@@ -38,7 +51,7 @@ bool CanMove(TetrisGame *game, Direction direction)
 	return _canMove;
 }
 
-bool canRotate(TetrisGame *game)
+bool CanRotate(TetrisGame *game)
 {
 	Shape nextShape = CopyShape(&game->shape);
 	Rotate(&nextShape);
@@ -94,7 +107,7 @@ void PlayerActionHandler(TetrisGame *game, PlayerAction action)
 	{
 		case ROTATE:
 		{
-			if (canRotate(game))
+			if (CanRotate(game))
 			{
 				Rotate(&(game->shape));
 				UpdateGraphics(game);
