@@ -132,8 +132,9 @@ void WaitForInput(TetrisGame *game)
 	cli();
 }
 
-TetrisGame InitTetrisGame()
+TetrisGame InitTetrisGame(int seed)
 {
+	SetRandomSeed(seed);
 	Shape shape = CreateRandomShape();
 	Vector vector = {
 		.x = ((double)(MAX_COLUMNS - shape.columns) / 2),
@@ -173,7 +174,7 @@ void DeleteGame(TetrisGame *game)
 /***************************************** Public Methods ******************************************/
 /****************************************************************************************************/
 
-void RunTetris()
+void RunTetris(int seed)
 {
 	TetrisState nextState = INIT;
 	TetrisGame game;
@@ -184,7 +185,7 @@ void RunTetris()
 		case INIT:
 		{
 			InitTetrisGraphics();
-			game = InitTetrisGame();
+			game = InitTetrisGame(seed);
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}

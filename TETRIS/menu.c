@@ -37,12 +37,13 @@ void RunMenu() {
 		sei();
 		while (!actionReady) {}
 		cli();
-		MenuAction menuAction =  MenuActionFromCoordinate(ReadLatestCoordinate());
+		Coordinate coordinates = ReadLatestCoordinate();
+		MenuAction menuAction =  MenuActionFromCoordinate(coordinates);
 		switch (menuAction)
 		{
 			case NEW_GAME:
 			{
-				RunTetris();
+				RunTetris((coordinates.x * 5) + (coordinates.y * 5));
 				break;	
 			}
 			

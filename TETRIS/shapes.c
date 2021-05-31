@@ -83,12 +83,11 @@ void CopyMatrix(Block* input, Block* output, size_t rows, size_t columns) {
 	}
 }
 
-void SetRandomSeed() {
-	// TODO: read analog input and set seed value
+void SetRandomSeed(int seed) {
+	srand(seed);
 }
 
 int CreateRandomNumber() {
-	SetRandomSeed();
 	return rand() % DEFAULT_COUNT;
 }
 

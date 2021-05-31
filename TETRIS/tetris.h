@@ -14,6 +14,6 @@
 #include "SD/SD_Driver.h"
 #include <avr/interrupt.h>
 
-void RunTetris();
+void RunTetris(int seed);
 
 #endif /* TETRIS_H_ */
