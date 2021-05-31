@@ -2,6 +2,8 @@
 skinparam Shadowing false
 hide circle
 
+mainframe User input functionality
+
 class menu{}
 class tetris{}
 
@@ -20,7 +22,9 @@ package coordinateMappers{
     class menuMapper{
         MenuActionFromCoordinate()
     }
-    class tetrisMapper{}
+    class tetrisMapper{
+        TetrisActionFromCoordinate()
+    }
 }
 
 menuMapper<--menu
