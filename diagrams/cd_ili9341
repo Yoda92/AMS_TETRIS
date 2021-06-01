@@ -1,0 +1,15 @@
+@startuml
+hide circle
+top to bottom direction
+
+frame "cd ILI9341" {
+    package graphics {}
+    class ILI9341 {
+        IL19341Init(): void
+        FillRectangle(unsigned int StartX, unsigned int StartY, unsigned int Width, unsigned int Height, Color color): void
+        DrawBitmap(char bitmap[], unsigned int StartX, unsigned int StartY, size_t factor, Color, Color): void
+    }
+
+    graphics --> ILI9341
+}
+@enduml

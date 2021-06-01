@@ -29,7 +29,7 @@
 volatile unsigned long startBlock, totalBlocks;
 volatile unsigned char SDHC_flag, cardType;
 
-unsigned char SD_init(void);
+unsigned char SD_init();
 unsigned char SD_sendCommand(unsigned char cmd, unsigned long arg);
 unsigned char SD_readSingleBlock(unsigned long startBlock, unsigned char* ptr);
 unsigned char SD_writeSingleBlock(unsigned long startBlock, unsigned char* ptr);
