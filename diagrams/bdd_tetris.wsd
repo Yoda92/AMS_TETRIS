@@ -12,16 +12,12 @@ frame "bdd tetris" {
     package ITDB02 as "ITDB02 Arduino Header" {
         [SD Cardreader] <<block>>
         [XPT2046] <<block>>
-    }
-
-    package LCD as "LCD Display Module" {
         [ILI9341] <<block>>
         [Display] <<block>>
     }
 
     tetris *--- [Arduino Atmega2560]
     tetris *--- ITDB02
-    tetris *--- LCD
     ILI9341 --> Display
     [SD Cardreader] --> [SD Card]
 }
