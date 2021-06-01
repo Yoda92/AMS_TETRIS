@@ -10,10 +10,11 @@ frame "cd shapes" {
         Color GetRGBColor(Block);
     }
     class shapes {
-        const Shape defaultShapes[DEFAULT_COUNT]
+        const Shape defaultShapes[]
         ShiftVector(Vector*, Direction): void
         CreateEmptyShape(size_t, size_t): Shape
         CreateRandomShape(): Shape
+        SetRandomSeed(int): void
         DeleteShape(Shape*): void
         Rotate(Shape*): void
         PrependRows(Shape*, size_t): void

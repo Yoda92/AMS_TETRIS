@@ -15,7 +15,7 @@ frame "cd tetris" {
     }
     package shapes {}
     class tetris {
-        RunTetris(): void
+        RunTetris(int): void
     }
     class timer {
         bool IsTimerComplete
