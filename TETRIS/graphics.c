@@ -71,6 +71,10 @@ void InitTetrisGraphics() {
 	referenceShape = CreateEmptyShape(BLOCK_COUNT_HEIGHT, BLOCK_COUNT_WIDTH);
 }
 
+void DestroyTetrisGraphics() {
+	DeleteShape(&referenceShape);
+}
+
 void DisplayGameOver() {
 	RenderBackground();
 	RenderText("GAME OVER", 12, 148, 3, rgbColors.white, rgbColors.black);

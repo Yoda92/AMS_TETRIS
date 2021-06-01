@@ -16,6 +16,19 @@ typedef enum
 /***************************************** Private Methods ******************************************/
 /****************************************************************************************************/
 
+void Move(TetrisGame *game, Direction direction);
+bool IsShapeOutOfBounds(Shape *shape);
+bool CanMove(TetrisGame *game, Direction direction);
+bool CanRotate(TetrisGame *game);
+Vector CreateDefaultVector(TetrisGame *game);
+bool CanCreateNewShape(TetrisGame *game, Shape *newShape);
+void SetNewShape(TetrisGame *game, Shape *newShape);
+void UpdateGraphics(TetrisGame *game);
+void PlayerActionHandler(TetrisGame *game, PlayerAction action);
+void WaitForInput(TetrisGame *game);
+TetrisGame InitTetrisGame(int seed);
+void RemoveCompleteRows(TetrisGame *game);
+void DeleteGame(TetrisGame *game);
 
 void Move(TetrisGame *game, Direction direction)
 {
@@ -38,7 +51,7 @@ bool CanMove(TetrisGame *game, Direction direction)
 	return _canMove;
 }
 
-bool canRotate(TetrisGame *game)
+bool CanRotate(TetrisGame *game)
 {
 	Shape nextShape = CopyShape(&game->shape);
 	Rotate(&nextShape);
@@ -94,7 +107,7 @@ void PlayerActionHandler(TetrisGame *game, PlayerAction action)
 	{
 		case ROTATE:
 		{
-			if (canRotate(game))
+			if (CanRotate(game))
 			{
 				Rotate(&(game->shape));
 				UpdateGraphics(game);
@@ -124,7 +137,7 @@ void WaitForInput(TetrisGame *game)
 		if (actionReady)
 		{
 			Coordinate coordinate = ReadLatestCoordinate();
-			PlayerAction action = ActionFromCoordinate(coordinate);
+			PlayerAction action = TetrisActionFromCoordinate(coordinate);
 			PlayerActionHandler(game, action);
 		}
 		sei();
@@ -132,8 +145,9 @@ void WaitForInput(TetrisGame *game)
 	cli();
 }
 
-TetrisGame InitTetrisGame()
+TetrisGame InitTetrisGame(int seed)
 {
+	SetRandomSeed(seed);
 	Shape shape = CreateRandomShape();
 	Vector vector = {
 		.x = ((double)(MAX_COLUMNS - shape.columns) / 2),
@@ -150,7 +164,7 @@ TetrisGame InitTetrisGame()
 void RemoveCompleteRows(TetrisGame *game)
 {
 	size_t removedRows = 0;
-	for (int i = 0; i < game->pile.rows; i++)
+	for (int i = 0; i < MAX_ROWS; i++)
 	{
 		if (IsRowComplete(&game->pile, i - removedRows))
 		{
@@ -166,17 +180,17 @@ void DeleteGame(TetrisGame *game)
 {
 	DeleteShape(&game->pile);
 	DeleteShape(&game->shape);
+	DestroyTetrisGraphics();
 }
 
 /****************************************************************************************************/
 /***************************************** Public Methods ******************************************/
 /****************************************************************************************************/
 
-void RunTetris()
+void RunTetris(int seed)
 {
 	TetrisState nextState = INIT;
 	TetrisGame game;
-	unsigned char highScore;
 	while (nextState != GAME_OVER)
 	{
 		switch (nextState)
@@ -184,8 +198,7 @@ void RunTetris()
 		case INIT:
 		{
 			InitTetrisGraphics();
-			game = InitTetrisGame();
-			InitXPT2046();
+			game = InitTetrisGame(seed);
 			nextState = UPDATE_GRAPHICS;
 			break;
 		}
@@ -238,10 +251,7 @@ void RunTetris()
 		}
 	}
 	UpdateGraphics(&game);
-	
-	if(game.score > MAX_SCORE) highScore = (unsigned char)MAX_SCORE;
-	else highScore = (unsigned char)game.score;
-	SD_saveHighScore(highScore);
+	SD_saveHighScore(game.score > MAX_SCORE ? (unsigned char) MAX_SCORE : (unsigned char) game.score);
 	DeleteGame(&game);
 	DisplayGameOver();
 	sei();

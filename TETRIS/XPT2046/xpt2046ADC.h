@@ -4,8 +4,8 @@
 #include "xpt2046Types.h"
 
 #define ADC_MAXVAL 255
-#define X_DIMENSION 240
-#define Y_DIMENSION 320
+#define X_DIMENSION 239
+#define Y_DIMENSION 319
 
 // ADC related
 Coordinate CoordFromADC(ADC_read reading);

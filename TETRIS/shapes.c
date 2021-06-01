@@ -11,7 +11,7 @@ struct {
 } shapeMatrices = {
 	.t = { EMPTY, RED, EMPTY, RED, RED, RED },
 	.s = { EMPTY, MAGENTA, MAGENTA, MAGENTA, MAGENTA, EMPTY },
-	.z = { LIGHTBLUE, LIGHTBLUE, EMPTY, EMPTY, LIGHTBLUE, LIGHTBLUE },
+	.z = { BLUE, BLUE, EMPTY, EMPTY, BLUE, BLUE },
 	.o = { YELLOW, YELLOW, YELLOW, YELLOW },
 	.l = { ORANGE, EMPTY, ORANGE, EMPTY, ORANGE, ORANGE },
 	.j = { EMPTY, GREEN, EMPTY, GREEN, GREEN, GREEN },
@@ -83,12 +83,11 @@ void CopyMatrix(Block* input, Block* output, size_t rows, size_t columns) {
 	}
 }
 
-void SetRandomSeed() {
-	// TODO: read analog input and set seed value
+void SetRandomSeed(int seed) {
+	srand(seed);
 }
 
 int CreateRandomNumber() {
-	SetRandomSeed();
 	return rand() % DEFAULT_COUNT;
 }
 
@@ -238,7 +237,7 @@ void RemoveRow(Shape* shape, size_t row)  {
 	}
 	free(shape->matrix);
 	shape->matrix = _matrix;
-	shape->rows = shape->rows - 1;
+	shape->rows--;
 }
 
 bool IsRowComplete(Shape* shape, size_t row) {
@@ -260,22 +259,22 @@ void ShiftVector(Vector* vector, Direction direction) {
 		switch (direction) {
 			case UP: {
 				if (vector->y > 0) {
-					vector->y = vector->y - 1;
+					vector->y--;
 				}
 				break;
 			}
 			case DOWN: {
-				vector->y = vector->y + 1;
+				vector->y++;
 				break;
 			}
 			case LEFT: {
 				if (vector->x > 0) {
-					vector->x = vector->x - 1;
+					vector->x--;
 				}
 				break;
 			}
 			case RIGHT: {
-				vector->x = vector->x + 1;
+				vector->x++;
 				break;
 			}
 			default: {}

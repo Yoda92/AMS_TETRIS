@@ -12,6 +12,7 @@ void DisplayGameOver();
 void RenderBackground();
 void InitGraphics();
 void InitTetrisGraphics();
+void DestroyTetrisGraphics();
 void RenderGame(Shape* shape, size_t score);
 void RenderText(char* text, size_t StartX, size_t StartY, size_t size, Color textColor, Color backgroundColor);
 

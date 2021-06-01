@@ -8,7 +8,7 @@ const RGBColors rgbColors = {
 	.lightblue = { .red = 0, .green = 255, .blue = 255  },
 	.magenta = { .red = 255, .green = 0, .blue = 255  },
 	.yellow = { .red = 255, .green = 255, .blue = 0  },
-	.orange = { .red = 200, .green = 100, .blue = 100  },
+	.orange = { .red = 255, .green = 220, .blue = 0  },
 	.white = { .red = 255, .green = 255, .blue = 255  },
 	.teal = { .red = 50, .green = 50, .blue = 125 }
 };

@@ -17,6 +17,7 @@ extern const Shape defaultShapes[DEFAULT_COUNT];
 void ShiftVector(Vector*, Direction);
 Shape CreateEmptyShape(size_t, size_t);
 Shape CreateRandomShape();
+void SetRandomSeed(int seed);
 void DeleteShape(Shape*);
 void Rotate(Shape*);
 void PrependRows(Shape*, size_t);
